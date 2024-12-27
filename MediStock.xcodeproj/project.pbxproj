@@ -37,6 +37,7 @@
 		53E0D8EC2C06717200DE1134 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E0D8EB2C06717200DE1134 /* MainTabView.swift */; };
 		53E0D8EE2C06718100DE1134 /* AllMedicinesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E0D8ED2C06718100DE1134 /* AllMedicinesView.swift */; };
 		7331BE662D1640A900993CF3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7331BE652D1640A900993CF3 /* GoogleService-Info.plist */; };
+		738249592D1F31FE00763D31 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738249582D1F31FE00763D31 /* User.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +80,7 @@
 		53E0D8EB2C06717200DE1134 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		53E0D8ED2C06718100DE1134 /* AllMedicinesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllMedicinesView.swift; sourceTree = "<group>"; };
 		7331BE652D1640A900993CF3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		738249582D1F31FE00763D31 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -205,6 +207,7 @@
 			children = (
 				53E0D8DB2C06099C00DE1134 /* Medicine.swift */,
 				53E0D8E92C066F7A00DE1134 /* HistoryEntry.swift */,
+				738249582D1F31FE00763D31 /* User.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -370,6 +373,7 @@
 				53E0D8E02C0609B900DE1134 /* SessionStore.swift in Sources */,
 				53E0D8DE2C0609A800DE1134 /* MedicineStockViewModel.swift in Sources */,
 				53E0D8992C06084700DE1134 /* ContentView.swift in Sources */,
+				738249592D1F31FE00763D31 /* User.swift in Sources */,
 				53E0D8DC2C06099C00DE1134 /* Medicine.swift in Sources */,
 				53E0D8DA2C06098F00DE1134 /* MedicineListView.swift in Sources */,
 				53E0D8E62C066F4100DE1134 /* AisleListView.swift in Sources */,
