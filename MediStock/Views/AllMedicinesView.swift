@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AllMedicinesView: View {
-    @ObservedObject var viewModel = MedicineStockViewModel()
+    @ObservedObject var viewModel: MedicineStockViewModel
     @State private var filterText: String = ""
     @State private var sortOption: SortOption = .none
 
@@ -41,7 +41,7 @@ struct AllMedicinesView: View {
                 }
                 .navigationBarTitle("All Medicines")
                 .navigationBarItems(trailing: Button(action: {
-                    viewModel.addRandomMedicine(user: "test_user") // Remplacez par l'utilisateur actuel
+                    viewModel.addRandomMedicine() // Remplacez par l'utilisateur actuel
                 }) {
                     Image(systemName: "plus")
                 })
@@ -82,8 +82,8 @@ enum SortOption: String, CaseIterable, Identifiable {
     var id: String { self.rawValue }
 }
 
-struct AllMedicinesView_Previews: PreviewProvider {
-    static var previews: some View {
-        AllMedicinesView()
-    }
-}
+//struct AllMedicinesView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        AllMedicinesView()
+//    }
+//}

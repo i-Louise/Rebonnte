@@ -2,9 +2,8 @@ import SwiftUI
 
 struct MedicineDetailView: View {
     @State var medicine: Medicine
-    @ObservedObject var viewModel = MedicineStockViewModel()
-    @EnvironmentObject var session: SessionStore
-
+    @ObservedObject var viewModel: MedicineStockViewModel
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
@@ -32,7 +31,7 @@ struct MedicineDetailView: View {
             viewModel.fetchHistory(for: medicine)
         }
         .onChange(of: medicine) { _ in
-            viewModel.updateMedicine(medicine, user: session.session?.uid ?? "")
+            viewModel.updateMedicine(medicine)
         }
     }
 }
@@ -43,7 +42,7 @@ extension MedicineDetailView {
             Text("Name")
                 .font(.headline)
             TextField("Name", text: $medicine.name, onCommit: {
-                viewModel.updateMedicine(medicine, user: session.session?.uid ?? "")
+                viewModel.updateMedicine(medicine)
             })
             .textFieldStyle(RoundedBorderTextFieldStyle())
             .padding(.bottom, 10)
@@ -57,20 +56,20 @@ extension MedicineDetailView {
                 .font(.headline)
             HStack {
                 Button(action: {
-                    viewModel.decreaseStock(medicine, user: session.session?.uid ?? "")
+                    viewModel.decreaseStock(medicine)
                 }) {
                     Image(systemName: "minus.circle")
                         .font(.title)
                         .foregroundColor(.red)
                 }
                 TextField("Stock", value: $medicine.stock, formatter: NumberFormatter(), onCommit: {
-                    viewModel.updateMedicine(medicine, user: session.session?.uid ?? "")
+                    viewModel.updateMedicine(medicine)
                 })
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .keyboardType(.numberPad)
                 .frame(width: 100)
                 Button(action: {
-                    viewModel.increaseStock(medicine, user: session.session?.uid ?? "")
+                    viewModel.increaseStock(medicine)
                 }) {
                     Image(systemName: "plus.circle")
                         .font(.title)
@@ -87,7 +86,7 @@ extension MedicineDetailView {
             Text("Aisle")
                 .font(.headline)
             TextField("Aisle", text: $medicine.aisle, onCommit: {
-                viewModel.updateMedicine(medicine, user: session.session?.uid ?? "")
+                viewModel.updateMedicine(medicine)
             })
             .textFieldStyle(RoundedBorderTextFieldStyle())
             .padding(.bottom, 10)
@@ -121,10 +120,10 @@ extension MedicineDetailView {
     }
 }
 
-struct MedicineDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        let sampleMedicine = Medicine(name: "Sample", stock: 10, aisle: "Aisle 1")
-        let sampleViewModel = MedicineStockViewModel()
-        MedicineDetailView(medicine: sampleMedicine, viewModel: sampleViewModel).environmentObject(SessionStore())
-    }
-}
+//struct MedicineDetailView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let sampleMedicine = Medicine(name: "Sample", stock: 10, aisle: "Aisle 1")
+//        let sampleViewModel = MedicineStockViewModel(currentUserRepository: <#CurrentUserRepository#>)
+//        MedicineDetailView(medicine: sampleMedicine, viewModel: sampleViewModel))
+//    }
+//}

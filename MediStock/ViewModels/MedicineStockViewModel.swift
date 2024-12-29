@@ -6,6 +6,11 @@ class MedicineStockViewModel: ObservableObject {
     @Published var aisles: [String] = []
     @Published var history: [HistoryEntry] = []
     private var db = Firestore.firestore()
+    private let currentUserRepository: CurrentUserRepository
+    
+    init(currentUserRepository: CurrentUserRepository) {
+        self.currentUserRepository = currentUserRepository
+    }
 
     func fetchMedicines() {
         db.collection("medicines").addSnapshotListener { (querySnapshot, error) in
@@ -32,11 +37,14 @@ class MedicineStockViewModel: ObservableObject {
         }
     }
 
-    func addRandomMedicine(user: String) {
+    func addRandomMedicine() {
+        guard let currentUser = currentUserRepository.getUser() else {
+            return
+        }
         let medicine = Medicine(name: "Medicine \(Int.random(in: 1...100))", stock: Int.random(in: 1...100), aisle: "Aisle \(Int.random(in: 1...10))")
         do {
             try db.collection("medicines").document(medicine.id ?? UUID().uuidString).setData(from: medicine)
-            addHistory(action: "Added \(medicine.name)", user: user, medicineId: medicine.id ?? "", details: "Added new medicine")
+            addHistory(action: "Added \(medicine.name)", user: currentUser.uid, medicineId: medicine.id ?? "", details: "Added new medicine")
         } catch let error {
             print("Error adding document: \(error)")
         }
@@ -54,16 +62,17 @@ class MedicineStockViewModel: ObservableObject {
         }
     }
 
-    func increaseStock(_ medicine: Medicine, user: String) {
-        updateStock(medicine, by: 1, user: user)
+    func increaseStock(_ medicine: Medicine) {
+        updateStock(medicine, by: 1)
     }
 
-    func decreaseStock(_ medicine: Medicine, user: String) {
-        updateStock(medicine, by: -1, user: user)
+    func decreaseStock(_ medicine: Medicine) {
+        updateStock(medicine, by: -1)
     }
 
-    private func updateStock(_ medicine: Medicine, by amount: Int, user: String) {
+    private func updateStock(_ medicine: Medicine, by amount: Int) {
         guard let id = medicine.id else { return }
+        guard let currentUser = currentUserRepository.getUser() else { return }
         let newStock = medicine.stock + amount
         db.collection("medicines").document(id).updateData([
             "stock": newStock
@@ -74,16 +83,17 @@ class MedicineStockViewModel: ObservableObject {
                 if let index = self.medicines.firstIndex(where: { $0.id == id }) {
                     self.medicines[index].stock = newStock
                 }
-                self.addHistory(action: "\(amount > 0 ? "Increased" : "Decreased") stock of \(medicine.name) by \(amount)", user: user, medicineId: id, details: "Stock changed from \(medicine.stock - amount) to \(newStock)")
+                self.addHistory(action: "\(amount > 0 ? "Increased" : "Decreased") stock of \(medicine.name) by \(amount)", user: currentUser.uid, medicineId: id, details: "Stock changed from \(medicine.stock - amount) to \(newStock)")
             }
         }
     }
 
-    func updateMedicine(_ medicine: Medicine, user: String) {
+    func updateMedicine(_ medicine: Medicine) {
         guard let id = medicine.id else { return }
+        guard let currentUser = currentUserRepository.getUser() else { return }
         do {
             try db.collection("medicines").document(id).setData(from: medicine)
-            addHistory(action: "Updated \(medicine.name)", user: user, medicineId: id, details: "Updated medicine details")
+            addHistory(action: "Updated \(medicine.name)", user: currentUser.uid, medicineId: id, details: "Updated medicine details")
         } catch let error {
             print("Error updating document: \(error)")
         }

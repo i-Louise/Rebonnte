@@ -38,6 +38,12 @@
 		53E0D8EE2C06718100DE1134 /* AllMedicinesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E0D8ED2C06718100DE1134 /* AllMedicinesView.swift */; };
 		7331BE662D1640A900993CF3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7331BE652D1640A900993CF3 /* GoogleService-Info.plist */; };
 		738249592D1F31FE00763D31 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738249582D1F31FE00763D31 /* User.swift */; };
+		738249682D1F354600763D31 /* AuthenticationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738249672D1F354600763D31 /* AuthenticationProtocol.swift */; };
+		7382496A2D1F58BF00763D31 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738249692D1F58BF00763D31 /* LoginViewModel.swift */; };
+		7382496C2D1F5B8200763D31 /* RegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382496B2D1F5B8200763D31 /* RegistrationViewModel.swift */; };
+		7382496E2D2036B000763D31 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382496D2D2036B000763D31 /* MainViewModel.swift */; };
+		738249702D21BD1600763D31 /* CurrentUserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382496F2D21BD1600763D31 /* CurrentUserRepository.swift */; };
+		738249722D21D5B000763D31 /* MediStockAppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738249712D21D5B000763D31 /* MediStockAppViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +87,12 @@
 		53E0D8ED2C06718100DE1134 /* AllMedicinesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllMedicinesView.swift; sourceTree = "<group>"; };
 		7331BE652D1640A900993CF3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		738249582D1F31FE00763D31 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		738249672D1F354600763D31 /* AuthenticationProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationProtocol.swift; sourceTree = "<group>"; };
+		738249692D1F58BF00763D31 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		7382496B2D1F5B8200763D31 /* RegistrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewModel.swift; sourceTree = "<group>"; };
+		7382496D2D2036B000763D31 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		7382496F2D21BD1600763D31 /* CurrentUserRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUserRepository.swift; sourceTree = "<group>"; };
+		738249712D21D5B000763D31 /* MediStockAppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediStockAppViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -198,6 +210,10 @@
 			isa = PBXGroup;
 			children = (
 				53E0D8DD2C0609A800DE1134 /* MedicineStockViewModel.swift */,
+				738249692D1F58BF00763D31 /* LoginViewModel.swift */,
+				7382496B2D1F5B8200763D31 /* RegistrationViewModel.swift */,
+				7382496D2D2036B000763D31 /* MainViewModel.swift */,
+				738249712D21D5B000763D31 /* MediStockAppViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -208,6 +224,7 @@
 				53E0D8DB2C06099C00DE1134 /* Medicine.swift */,
 				53E0D8E92C066F7A00DE1134 /* HistoryEntry.swift */,
 				738249582D1F31FE00763D31 /* User.swift */,
+				7382496F2D21BD1600763D31 /* CurrentUserRepository.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -215,9 +232,18 @@
 		738249572D1EE8CB00763D31 /* NetworkService */ = {
 			isa = PBXGroup;
 			children = (
+				738249662D1F350500763D31 /* Protocols */,
 				53E0D8DF2C0609B900DE1134 /* SessionStore.swift */,
 			);
 			path = NetworkService;
+			sourceTree = "<group>";
+		};
+		738249662D1F350500763D31 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				738249672D1F354600763D31 /* AuthenticationProtocol.swift */,
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -368,11 +394,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				53E0D8E22C065FFE00DE1134 /* AppDelegate.swift in Sources */,
+				7382496C2D1F5B8200763D31 /* RegistrationViewModel.swift in Sources */,
+				738249682D1F354600763D31 /* AuthenticationProtocol.swift in Sources */,
+				738249702D21BD1600763D31 /* CurrentUserRepository.swift in Sources */,
 				53E0D8D82C06097900DE1134 /* LoginView.swift in Sources */,
 				53E0D8EA2C066F7A00DE1134 /* HistoryEntry.swift in Sources */,
+				7382496A2D1F58BF00763D31 /* LoginViewModel.swift in Sources */,
 				53E0D8E02C0609B900DE1134 /* SessionStore.swift in Sources */,
 				53E0D8DE2C0609A800DE1134 /* MedicineStockViewModel.swift in Sources */,
 				53E0D8992C06084700DE1134 /* ContentView.swift in Sources */,
+				738249722D21D5B000763D31 /* MediStockAppViewModel.swift in Sources */,
 				738249592D1F31FE00763D31 /* User.swift in Sources */,
 				53E0D8DC2C06099C00DE1134 /* Medicine.swift in Sources */,
 				53E0D8DA2C06098F00DE1134 /* MedicineListView.swift in Sources */,
@@ -381,6 +412,7 @@
 				53E0D8E82C066F6500DE1134 /* MedicineDetailView.swift in Sources */,
 				53E0D8EE2C06718100DE1134 /* AllMedicinesView.swift in Sources */,
 				53E0D8EC2C06717200DE1134 /* MainTabView.swift in Sources */,
+				7382496E2D2036B000763D31 /* MainViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

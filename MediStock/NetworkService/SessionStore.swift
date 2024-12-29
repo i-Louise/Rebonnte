@@ -1,52 +1,74 @@
 import Foundation
 import Firebase
 
-class SessionStore: ObservableObject {
+class AuthenticationService: AuthenticationProtocol {
     @Published var session: User?
     var handle: AuthStateDidChangeListenerHandle?
-
-    func listen() {
-        handle = Auth.auth().addStateDidChangeListener { (auth, user) in
-            if let user = user {
-                self.session = User(uid: user.uid, email: user.email)
-            } else {
-                self.session = nil
-            }
-        }
-    }
-
-    func signUp(email: String, password: String) {
-        Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
+    
+    func signUp(
+        email: String,
+        password: String,
+        completion: @escaping (Result<User, Error>)
+        -> Void
+    ) {
+        Auth.auth().createUser(withEmail: email, password: password) { result, error in
             if let error = error {
-                print("Error creating user: \(error.localizedDescription) \(error)")
+                completion(.failure(error))
+            } else if let firebaseUser = result?.user {
+                let user = User(uid: firebaseUser.uid, email: firebaseUser.email)
+                completion(.success(user))
             } else {
-                self.session = User(uid: result?.user.uid ?? "", email: result?.user.email ?? "")
+                completion(.failure(NSError(domain: "AuthenticationService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unknow error while registration"])))
             }
         }
     }
-
-    func signIn(email: String, password: String) {
-        Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
+    
+    func signIn(
+        email: String,
+        password: String,
+        completion: @escaping (Result<User, Error>)
+        -> Void
+    ) {
+        Auth.auth().signIn(withEmail: email, password: password) { result, error in
             if let error = error {
-                print("Error signing in: \(error.localizedDescription)")
+                completion(.failure(error))
+            } else if let firebaseUser = result?.user {
+                let user = User(uid: firebaseUser.uid, email: firebaseUser.email)
+                completion(.success(user))
             } else {
-                self.session = User(uid: result?.user.uid ?? "", email: result?.user.email ?? "")
+                completion(.failure(NSError(domain: "AuthService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unknown error while login"])))
             }
         }
     }
-
-    func signOut() {
+    
+    func signOut(
+        completion: @escaping (Result<Void, Error>)
+        -> Void
+    ) {
         do {
             try Auth.auth().signOut()
-            self.session = nil
+            completion(.success(()))
         } catch let error {
-            print("Error signing out: \(error.localizedDescription)")
+            completion(.failure(error))
         }
     }
-
-    func unbind() {
-        if let handle = handle {
-            Auth.auth().removeStateDidChangeListener(handle)
+    
+    func listenForAuthChanges(
+        _ callback: @escaping (User?)
+        -> Void)
+    -> AuthStateDidChangeListenerHandle
+    {
+        return Auth.auth().addStateDidChangeListener { _, firebaseUser in
+            if let firebaseUser = firebaseUser {
+                let user = User(uid: firebaseUser.uid, email: firebaseUser.email)
+                callback(user)
+            } else {
+                callback(nil)
+            }
         }
+    }
+    
+    func removeAuthListener(_ handle: AuthStateDidChangeListenerHandle) {
+        Auth.auth().removeStateDidChangeListener(handle)
     }
 }
