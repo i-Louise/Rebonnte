@@ -4,6 +4,7 @@ struct AllMedicinesView: View {
     @ObservedObject var viewModel: MedicineStockViewModel
     @State private var filterText: String = ""
     @State private var sortOption: SortOption = .none
+    @State private var isShowingAddMedicineSheet = false
 
     var body: some View {
         NavigationView {
@@ -29,7 +30,7 @@ struct AllMedicinesView: View {
                 // Liste des Médicaments
                 List {
                     ForEach(filteredAndSortedMedicines, id: \.id) { medicine in
-                        NavigationLink(destination: MedicineDetailView(medicine: medicine, viewModel: viewModel)) {
+                        NavigationLink(destination: MedicineDetailView(viewModel: viewModel.getMedicineDetailViewModel(medicine: medicine))) {
                             VStack(alignment: .leading) {
                                 Text(medicine.name)
                                     .font(.headline)
@@ -38,13 +39,18 @@ struct AllMedicinesView: View {
                             }
                         }
                     }
+                    .onDelete(perform: viewModel.deleteMedicines)
                 }
                 .navigationBarTitle("All Medicines")
                 .navigationBarItems(trailing: Button(action: {
-                    viewModel.addRandomMedicine() // Remplacez par l'utilisateur actuel
+                    isShowingAddMedicineSheet = true
                 }) {
                     Image(systemName: "plus")
                 })
+                .sheet(isPresented: $isShowingAddMedicineSheet) {
+                    AddMedicineView()
+                        .environmentObject(viewModel)
+                }
             }
         }
         .onAppear {

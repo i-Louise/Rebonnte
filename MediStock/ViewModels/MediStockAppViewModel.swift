@@ -16,14 +16,15 @@ class MediStockAppViewModel {
         authenticationService = AuthenticationService()
     }
     
-    var mainViewModel: MainViewModel {
+    lazy var mainViewModel: MainViewModel = {
         return MainViewModel(authService: authenticationService, currentUserRepository: currentUserRepository)
-    }
+    }()
     
-    var loginViewModel: LoginViewModel {
+    lazy var loginViewModel: LoginViewModel = {
         return LoginViewModel(authenticationService: authenticationService, currentUserRepository: currentUserRepository)
-    }
-    var medicineStockViewModel: MedicineStockViewModel {
-        return MedicineStockViewModel(currentUserRepository: currentUserRepository)
-    }
+    }()
+    
+    lazy var medicineStockViewModel: MedicineStockViewModel = {
+        return MedicineStockViewModel(currentUserRepository: currentUserRepository, medicineStockService: MedicineStockService())
+    }()
 }
