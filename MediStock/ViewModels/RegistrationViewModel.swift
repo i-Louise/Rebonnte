@@ -19,7 +19,6 @@ class RegistrationViewModel: ObservableObject {
         authenticationService.signUp(email: email, password: password) { result in
             switch result {
             case .success(_):
-                print("Add completion handler")
                 self.isUserRegistered = true
             case .failure(let error):
                 // Add error message

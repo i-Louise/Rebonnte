@@ -49,6 +49,7 @@
 		738249782D22D7EF00763D31 /* MedicineDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738249772D22D7EF00763D31 /* MedicineDetailViewModel.swift */; };
 		7382497A2D231C1100763D31 /* ReadingMedicineDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738249792D231C1100763D31 /* ReadingMedicineDetailView.swift */; };
 		7382497C2D231C2600763D31 /* EditingMedicineDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382497B2D231C2600763D31 /* EditingMedicineDetailView.swift */; };
+		73D8F42F2D2374AE001BC832 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D8F42E2D2374AE001BC832 /* UserProfileView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,6 +104,7 @@
 		738249772D22D7EF00763D31 /* MedicineDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicineDetailViewModel.swift; sourceTree = "<group>"; };
 		738249792D231C1100763D31 /* ReadingMedicineDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingMedicineDetailView.swift; sourceTree = "<group>"; };
 		7382497B2D231C2600763D31 /* EditingMedicineDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditingMedicineDetailView.swift; sourceTree = "<group>"; };
+		73D8F42E2D2374AE001BC832 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -215,6 +217,7 @@
 				53E0D8E52C066F4100DE1134 /* AisleListView.swift */,
 				53E0D8ED2C06718100DE1134 /* AllMedicinesView.swift */,
 				738249752D22230600763D31 /* AddMedicineView.swift */,
+				73D8F42E2D2374AE001BC832 /* UserProfileView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -413,6 +416,7 @@
 				738249762D22230600763D31 /* AddMedicineView.swift in Sources */,
 				738249682D1F354600763D31 /* AuthenticationProtocol.swift in Sources */,
 				738249702D21BD1600763D31 /* CurrentUserRepository.swift in Sources */,
+				73D8F42F2D2374AE001BC832 /* UserProfileView.swift in Sources */,
 				53E0D8D82C06097900DE1134 /* LoginView.swift in Sources */,
 				7382497C2D231C2600763D31 /* EditingMedicineDetailView.swift in Sources */,
 				53E0D8EA2C066F7A00DE1134 /* HistoryEntry.swift in Sources */,

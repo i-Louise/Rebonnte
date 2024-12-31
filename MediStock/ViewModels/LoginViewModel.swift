@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 class LoginViewModel: ObservableObject {
     private let authenticationService: AuthenticationProtocol
@@ -28,6 +29,13 @@ class LoginViewModel: ObservableObject {
         }
     }
     func signOut() {
-        currentUserRepository.clearUser()
+        authenticationService.signOut { result in
+            switch result {
+            case .success:
+                self.currentUserRepository.clearUser()
+            case .failure(let error):
+                print("Sign out failed: \(error.localizedDescription)")
+            }
+        }
     }
 }

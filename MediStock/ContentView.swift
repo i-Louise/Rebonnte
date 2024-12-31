@@ -13,7 +13,7 @@ struct ContentView: View {
     
     var body: some View {
         if viewModel.currentUser != nil {
-            MainTabView(medicineStockViewModel: medicineStockViewModel)
+            MainTabView(medicineStockViewModel: medicineStockViewModel, loginViewModel: loginViewModel)
         } else {
             LoginView(viewModel: loginViewModel)
         }
