@@ -21,13 +21,17 @@ struct AddMedicineView: View {
             Form {
                 Section(header: Text("Medicine Information")) {
                     TextField("Name", text: $name)
-                    Picker("Stock", selection: $stock) {
-                        ForEach(0..<101, id: \.self) { value in
-                            Text("\(value)").tag(value)
+                    TextField("Stock", text: Binding(
+                        get: { String(stock) },
+                        set: {
+                            if let value = Int($0), value >= 0 {
+                                stock = value
+                            }
                         }
-                    }
-                    .pickerStyle(WheelPickerStyle())
+                    ))
+                    .keyboardType(.numberPad)
                     TextField("Aisle", text: $aisle)
+                        .keyboardType(.numberPad)
                 }
             }
             .navigationTitle("Add Medicine")

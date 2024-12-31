@@ -11,7 +11,6 @@ struct MedicineDetailView: View {
                 ReadingMedicineDetailView(viewModel: viewModel, medicine: viewModel.medicine)
             }
         }
-        .navigationBarBackButtonHidden(true)
     }
 }
 

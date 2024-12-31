@@ -10,7 +10,7 @@ import Firebase
 import FirebaseFirestore
 
 protocol MedicineStockProtocol {
-    func fetchMedicines(completion: @escaping (Result<[Medicine], Error>) -> Void)
+    func fetchMedicines(filterText: String, sortOption: SortOption, completion: @escaping (Result<[Medicine], Error>) -> Void)
     func fetchAisles(completion: @escaping (Result<[String], Error>) -> Void)
     func addMedicine(name: String, stock: Int, aisle: String, completion: @escaping (Result<String, Error>) -> Void)
     func deleteMedicine(withID id: String, completion: @escaping (Error?) -> Void)
@@ -24,17 +24,35 @@ class MedicineStockService: MedicineStockProtocol {
     
     private var db = Firestore.firestore()
     
-    func fetchMedicines(completion: @escaping (Result<[Medicine], Error>) -> Void) {
-        db.collection("medicines").addSnapshotListener { querySnapshot, error in
+    func fetchMedicines(filterText: String, sortOption: SortOption, completion: @escaping (Result<[Medicine], Error>) -> Void) {
+        var query: Query = db.collection("medicines")
+        
+        if !filterText.isEmpty {
+            query = query.whereField("name", isGreaterThanOrEqualTo: filterText)
+                .whereField("name", isLessThanOrEqualTo: filterText + "\u{f8ff}")
+        }
+        
+        switch sortOption {
+        case .name:
+            query = query.order(by: "name", descending: false)
+        case .stock:
+            query = query.order(by: "stock", descending: false)
+        case .none:
+            break
+        }
+        
+        query.getDocuments { snapshot, error in
             if let error = error {
                 completion(.failure(error))
                 return
             }
-            guard let snapshot = querySnapshot else {
-                completion(.failure(NSError(domain: "NetworkService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No documents found"])))
+            
+            guard let documents = snapshot?.documents else {
+                completion(.success([]))
                 return
             }
-            let medicines = snapshot.documents.compactMap { document in
+            
+            let medicines: [Medicine] = documents.compactMap { document in
                 try? document.data(as: Medicine.self)
             }
             completion(.success(medicines))
@@ -63,9 +81,9 @@ class MedicineStockService: MedicineStockProtocol {
         let medicine = Medicine(name: name, stock: stock, aisle: aisle)
         
         guard let userEmail = Auth.auth().currentUser?.email else {
-                completion(.failure(NSError(domain: "", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not authenticated"])))
-                return
-            }
+            completion(.failure(NSError(domain: "", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not authenticated"])))
+            return
+        }
         let medicineID = medicine.id ?? UUID().uuidString
         do {
             try db.collection("medicines").document(medicineID).setData(from: medicine)

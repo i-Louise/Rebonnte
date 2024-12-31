@@ -5,17 +5,30 @@ class MedicineStockViewModel: ObservableObject {
     @Published var medicines: [Medicine] = []
     @Published var aisles: [String] = []
     @Published var history: [HistoryEntry] = []
+    @Published var filterText: String = ""
+    @Published var sortOption: SortOption = .none
     private var db = Firestore.firestore()
     private let currentUserRepository: CurrentUserRepository
     private let medicineStockService: MedicineStockService
+    private var currentFilter: String = ""
     
     init(currentUserRepository: CurrentUserRepository, medicineStockService: MedicineStockService) {
         self.currentUserRepository = currentUserRepository
         self.medicineStockService = medicineStockService
     }
     
+    func updateFilter(text: String) {
+        currentFilter = text
+        fetchMedicines()
+    }
+    
+    func updateSorting(option: SortOption) {
+        sortOption = option
+        fetchMedicines()
+    }
+    
     func fetchMedicines() {
-        medicineStockService.fetchMedicines { [weak self] result in
+        medicineStockService.fetchMedicines(filterText: filterText, sortOption: sortOption) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let medicines):

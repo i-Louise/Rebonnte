@@ -7,14 +7,13 @@ struct AisleListView: View {
     var body: some View {
         NavigationView {
             List {
-                Text("Aisles")
-                    .font(.title)
                 ForEach(viewModel.aisles, id: \.self) { aisle in
                     NavigationLink(destination: MedicineListView(viewModel: viewModel, aisle: aisle)) {
                         Text(aisle)
                     }
                 }
             }
+            .navigationBarTitle("Aisles")
             .navigationBarItems(trailing: Button(action: {
                 isShowingAddMedicineSheet = true
             }) {
