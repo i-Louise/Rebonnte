@@ -11,6 +11,7 @@ class MedicineStockViewModel: ObservableObject {
     private let currentUserRepository: CurrentUserRepository
     private let medicineStockService: MedicineStockService
     private var currentFilter: String = ""
+
     
     init(currentUserRepository: CurrentUserRepository, medicineStockService: MedicineStockService) {
         self.currentUserRepository = currentUserRepository
@@ -66,6 +67,7 @@ class MedicineStockViewModel: ObservableObject {
                                 details: "Added new medicine")
                 
                 self.fetchMedicines()
+                completion(.success("Medicine added successfully"))
             case .failure(let error): break
                 //set error
             }

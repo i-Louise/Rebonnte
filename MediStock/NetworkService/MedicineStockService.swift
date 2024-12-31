@@ -25,38 +25,38 @@ class MedicineStockService: MedicineStockProtocol {
     private var db = Firestore.firestore()
     
     func fetchMedicines(filterText: String, sortOption: SortOption, completion: @escaping (Result<[Medicine], Error>) -> Void) {
-        var query: Query = db.collection("medicines")
-        
-        if !filterText.isEmpty {
-            query = query.whereField("name", isGreaterThanOrEqualTo: filterText)
-                .whereField("name", isLessThanOrEqualTo: filterText + "\u{f8ff}")
-        }
-        
-        switch sortOption {
-        case .name:
-            query = query.order(by: "name", descending: false)
-        case .stock:
-            query = query.order(by: "stock", descending: false)
-        case .none:
-            break
-        }
-        
-        query.getDocuments { snapshot, error in
-            if let error = error {
-                completion(.failure(error))
-                return
+        var query: Query = Firestore.firestore().collection("medicines")
+            
+            if !filterText.isEmpty {
+                query = query.whereField("name", isGreaterThanOrEqualTo: filterText)
+                              .whereField("name", isLessThanOrEqualTo: filterText + "\u{f8ff}")
             }
             
-            guard let documents = snapshot?.documents else {
-                completion(.success([]))
-                return
+            switch sortOption {
+            case .name:
+                query = query.order(by: "name", descending: false)
+            case .stock:
+                query = query.order(by: "stock", descending: false)
+            case .none:
+                break
             }
             
-            let medicines: [Medicine] = documents.compactMap { document in
-                try? document.data(as: Medicine.self)
+            query.getDocuments { snapshot, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard let documents = snapshot?.documents else {
+                    completion(.success([]))
+                    return
+                }
+                
+                let medicines: [Medicine] = documents.compactMap { document in
+                    try? document.data(as: Medicine.self) // Assurez-vous que Medicine est `Codable`
+                }
+                completion(.success(medicines))
             }
-            completion(.success(medicines))
-        }
     }
     
     func fetchAisles(completion: @escaping (Result<[String], Error>) -> Void) {
@@ -81,9 +81,9 @@ class MedicineStockService: MedicineStockProtocol {
         let medicine = Medicine(name: name, stock: stock, aisle: aisle)
         
         guard let userEmail = Auth.auth().currentUser?.email else {
-            completion(.failure(NSError(domain: "", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not authenticated"])))
-            return
-        }
+                completion(.failure(NSError(domain: "", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not authenticated"])))
+                return
+            }
         let medicineID = medicine.id ?? UUID().uuidString
         do {
             try db.collection("medicines").document(medicineID).setData(from: medicine)

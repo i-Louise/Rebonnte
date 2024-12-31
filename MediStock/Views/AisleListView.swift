@@ -20,7 +20,7 @@ struct AisleListView: View {
                 Image(systemName: "plus")
             })
             .sheet(isPresented: $isShowingAddMedicineSheet) {
-                AddMedicineView()
+                AddMedicineView(isShowingAddMedicineSheet: $isShowingAddMedicineSheet)
                     .environmentObject(viewModel)
             }
         }

@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct AddMedicineView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Binding var isShowingAddMedicineSheet: Bool
     @EnvironmentObject var viewModel: MedicineStockViewModel
-    
     @State private var name: String = ""
     @State private var stock: Int = 0
     @State private var aisle: String = ""
@@ -36,12 +35,17 @@ struct AddMedicineView: View {
             }
             .navigationTitle("Add Medicine")
             .navigationBarItems(leading: Button("Cancel", action: {
-                presentationMode.wrappedValue.dismiss()
+                isShowingAddMedicineSheet = false
             }), trailing: Button("Add") {
-                viewModel.addMedicine(name: name, stock: stock, aisle: aisle) { _ in
-                    presentationMode.wrappedValue.dismiss()
+                viewModel.addMedicine(name: name, stock: stock, aisle: aisle) { result in
+                    switch result {
+                    case .success:
+                        isShowingAddMedicineSheet = false
+                    case .failure(let error):
+                        // error message alert
+                        print("Error: \(error.localizedDescription)")
+                    }
                 }
-                
             }
                 .disabled(name.isEmpty || aisle.isEmpty || stock == 0)
             )
@@ -49,6 +53,6 @@ struct AddMedicineView: View {
     }
 }
 
-#Preview {
-    AddMedicineView()
-}
+//#Preview {
+//    AddMedicineView()
+//}
