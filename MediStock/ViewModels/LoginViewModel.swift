@@ -17,6 +17,10 @@ class LoginViewModel: ObservableObject {
         self.currentUserRepository = currentUserRepository
     }
     
+    var registrationViewModel: RegistrationViewModel {
+        return RegistrationViewModel(authenticationService: authenticationService)
+    }
+    
     func signIn(email: String, password: String) {
         authenticationService.signIn(email: email, password: password) { result in
             switch result {
