@@ -44,7 +44,9 @@ struct AllMedicinesView: View {
                             }
                         }
                     }
-                    .onDelete(perform: viewModel.deleteMedicines)
+                    .onDelete { offsets in
+                        viewModel.deleteMedicines(at: offsets)
+                    }
                 }
                 .navigationBarTitle("All Medicines")
                 .navigationBarItems(trailing: Button(action: {

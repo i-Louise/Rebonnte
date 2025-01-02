@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ReadingMedicineDetailView: View {
     @ObservedObject var viewModel: MedicineDetailViewModel
-    var medicine: Medicine
     
     var body: some View {
         NavigationStack {
@@ -54,7 +53,7 @@ struct ReadingMedicineDetailView: View {
         }
         .navigationBarTitle("Medicine Details", displayMode: .inline)
         .onAppear {
-            viewModel.fetchHistory(for: medicine)
+            viewModel.fetchHistory(for: viewModel.medicine)
         }
     }
 }
@@ -63,8 +62,8 @@ extension ReadingMedicineDetailView {
     
     private var historySection: some View {
         
-        VStack(alignment: .leading) {
-            ForEach(viewModel.history.filter { $0.medicineId == medicine.id }, id: \.id) { entry in
+        
+            ForEach(viewModel.history) { entry in
                 VStack(alignment: .leading, spacing: 5) {
                     HStack {
                         Image(systemName: "archivebox.fill")
@@ -83,7 +82,7 @@ extension ReadingMedicineDetailView {
                 .cornerRadius(10)
                 .padding(.bottom, 5)
             }
-        }
+        
     }
 }
 

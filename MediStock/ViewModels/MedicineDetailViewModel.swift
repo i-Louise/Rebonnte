@@ -13,7 +13,9 @@ class MedicineDetailViewModel: ObservableObject {
     @Published var medicine: Medicine
     @Published var medicineCopy: Medicine
     @Published var isEditing: Bool = false
-    @Published var history: [HistoryEntry] = []
+    @Published var history: [HistoryEntry] = [HistoryEntry(medicineId: "test", user: "User", action: "This is a test", details: "Test")]
+    @Published var isLoading: Bool = false
+    @Published var alertMessage: String? = nil
     
     init(networkService: MedicineStockService, medicine: Medicine, currentUserRepository: CurrentUserRepository) {
         self.networkService = networkService
@@ -63,61 +65,57 @@ class MedicineDetailViewModel: ObservableObject {
         
         let action = actionDetails.joined(separator: ", ")
         let details = changeDetails.joined(separator: "\n")
-            
+        
         return (action: action, details: details)
     }
     
     private func updateRemoteMedicine(medicine: Medicine, originalMedicine: Medicine) {
+        isLoading = true
+        alertMessage = nil
         guard let currentUser = currentUserRepository.getUser() else { return }
-        
-        networkService.updateMedicine(medicine) { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success:
-                    if let actionDetails = self?.generateActionDetails(for: medicine, original: originalMedicine) {
-                        self?.addHistory(
-                            action: actionDetails.action,
-                            user: "User \(currentUser.email ?? "Unknown")",
-                            medicineId: medicine.id ?? "Unknown ID",
-                            details: actionDetails.details
-                        )
-                    }
-                    print("Medicine updated successfully")
-                    print("Success")
-                case .failure(let error):
-                    print("Error: \(error)")
+        Task {
+            do {
+                try await networkService.updateMedicine(medicine)
+                let actionDetails = self.generateActionDetails(for: medicine, original: originalMedicine)
+                await self.addHistory(
+                    action: actionDetails.action,
+                    user: "User \(currentUser.email ?? "Unknown")",
+                    medicineId: medicine.id ?? "Unknown ID",
+                    details: actionDetails.details
+                )
+                DispatchQueue.main.async {
+                    self.isLoading = false
                 }
+            } catch {
+                isLoading = false
+                alertMessage = "Error updating medicine: \(error)"
             }
         }
     }
     
-    private func addHistory(action: String, user: String, medicineId: String, details: String) {
+    private func addHistory(action: String, user: String, medicineId: String, details: String) async {
         let history = HistoryEntry(medicineId: medicineId, user: user, action: action, details: details)
-        networkService.addHistory(history: history) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success:
-                    print("History added successfully.")
-                case .failure(let error):
-                    print("History failure")
-                    //self.errorMessage = error.localizedDescription
-                }
-            }
+        do {
+            try await networkService.addHistory(history: history)
+        } catch {
+            alertMessage = "Error adding history: \(error)"
         }
     }
     
     func fetchHistory(for medicine: Medicine) {
-        guard let medicineId = medicine.id else {
-            print("Invalid medicine ID")
-            return
-        }
-        networkService.fetchHistory(for: medicineId) { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let fetchedHistory):
-                    self?.history = fetchedHistory
-                case .failure(let error):
-                    print("Failed to fetch history: \(error.localizedDescription)")
+        alertMessage = nil
+        guard let medicineId = medicine.id else { return }
+        Task {
+            do {
+                let history = try await networkService.fetchHistory(for: medicineId)
+                DispatchQueue.main.async {
+                    self.history = history
+                    print("fetchHistory succeded, history: \(self.history.count)")
+                }
+            } catch let error {
+                print("An error has occurred while fetching history: \(error)")
+                DispatchQueue.main.async {
+                    self.alertMessage = error.localizedDescription
                 }
             }
         }

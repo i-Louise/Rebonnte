@@ -8,6 +8,15 @@ struct LoginView: View {
 
     var body: some View {
         VStack(spacing: 20) {
+            VStack {
+                Text("MediStock")
+                    .font(.largeTitle)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.blue)
+                Text("Login to your account")
+                    .font(.headline)
+                    .foregroundColor(.gray)
+            }.padding(40)
             EntryFieldView(placeHolder: "Email address", field: $email, imageName: "person.fill")
                 .keyboardType(.emailAddress)
                 .accessibilityIdentifier("emailTextField")

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AddMedicineView: View {
     @Binding var isShowingAddMedicineSheet: Bool
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var viewModel: MedicineStockViewModel
     @State private var name: String = ""
     @State private var stock: Int = 0
@@ -37,14 +38,9 @@ struct AddMedicineView: View {
             .navigationBarItems(leading: Button("Cancel", action: {
                 isShowingAddMedicineSheet = false
             }), trailing: Button("Add") {
-                viewModel.addMedicine(name: name, stock: stock, aisle: aisle) { result in
-                    switch result {
-                    case .success:
-                        isShowingAddMedicineSheet = false
-                    case .failure(let error):
-                        // error message alert
-                        print("Error: \(error.localizedDescription)")
-                    }
+                viewModel.addMedicine(name: name, stock: stock, aisle: aisle)
+                if viewModel.isAdded {
+                    dismiss()
                 }
             }
                 .disabled(name.isEmpty || aisle.isEmpty || stock == 0)

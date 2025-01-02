@@ -9,9 +9,11 @@ import Foundation
 
 class RegistrationViewModel: ObservableObject {
     @Published var isUserRegistered: Bool = false
+    @Published var isLoading: Bool = false
     @Published var emailErrorMessage: String? = nil
     @Published var passwordErrorMessage: String? = nil
     @Published var confirmPasswordErrorMessage: String? = nil
+    @Published var alertMessage: String? = nil
     
     private let authenticationService: AuthenticationProtocol
     
@@ -35,13 +37,15 @@ class RegistrationViewModel: ObservableObject {
     }
     
     private func signUp(email: String, password: String) {
-        authenticationService.signUp(email: email, password: password) { result in
-            switch result {
-            case .success(_):
+        isLoading = true
+        Task {
+            do {
+                let user = try await authenticationService.signUp(email: email, password: password)
                 self.isUserRegistered = true
-            case .failure(let error):
-                // Add error message
-                print("Sign up failed: \(error.localizedDescription)")
+                self.isLoading = false
+            } catch {
+                self.isUserRegistered = false
+                self.alertMessage = "Failed to sign up: \(error.localizedDescription)"
             }
         }
     }

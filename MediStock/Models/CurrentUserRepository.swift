@@ -11,7 +11,9 @@ class CurrentUserRepository {
     private var user: User?
     
     func setUser(_ user: User) {
-        self.user = user
+        DispatchQueue.main.async {
+            self.user = user
+        }
     }
     
     func getUser() -> User? {
@@ -19,6 +21,8 @@ class CurrentUserRepository {
     }
     
     func clearUser() {
-        self.user = nil
+        DispatchQueue.main.async {
+            self.user = nil
+        }
     }
 }

@@ -11,6 +11,8 @@ import FirebaseAuth
 class LoginViewModel: ObservableObject {
     private let authenticationService: AuthenticationProtocol
     private var currentUserRepository: CurrentUserRepository
+    @Published var isLoading: Bool = false
+    @Published var alertMessage: String? = nil
     
     init(authenticationService: AuthenticationProtocol, currentUserRepository: CurrentUserRepository) {
         self.authenticationService = authenticationService
@@ -22,23 +24,30 @@ class LoginViewModel: ObservableObject {
     }
     
     func signIn(email: String, password: String) {
-        authenticationService.signIn(email: email, password: password) { result in
-            switch result {
-            case .success(let user):
-                self.currentUserRepository.setUser(user)
-            case .failure(let error):
-                // Add error message
-                print("Sign in failed: \(error.localizedDescription)")
+        isLoading = true
+        alertMessage = nil
+        Task {
+            do {
+                let signedUser = try await authenticationService.signIn(email: email, password: password)
+                self.currentUserRepository.setUser(signedUser)
+                self.isLoading = false
+            } catch {
+                self.alertMessage = error.localizedDescription
+                self.isLoading = false
             }
         }
     }
+    
     func signOut() {
-        authenticationService.signOut { result in
-            switch result {
-            case .success:
-                self.currentUserRepository.clearUser()
-            case .failure(let error):
-                print("Sign out failed: \(error.localizedDescription)")
+        isLoading = true
+        alertMessage = nil
+        Task {
+            do {
+                try await authenticationService.signOut()
+                self.isLoading = false
+            } catch {
+                self.alertMessage = error.localizedDescription
+                self.isLoading = false
             }
         }
     }

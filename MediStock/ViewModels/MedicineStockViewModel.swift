@@ -7,10 +7,12 @@ class MedicineStockViewModel: ObservableObject {
     @Published var history: [HistoryEntry] = []
     @Published var filterText: String = ""
     @Published var sortOption: SortOption = .none
+    @Published var isLoading: Bool = false
+    @Published var alertMessage: String? = nil
+    @Published var isAdded: Bool = false
     private var db = Firestore.firestore()
     private let currentUserRepository: CurrentUserRepository
     private let medicineStockService: MedicineStockService
-    private var currentFilter: String = ""
 
     
     init(currentUserRepository: CurrentUserRepository, medicineStockService: MedicineStockService) {
@@ -19,7 +21,7 @@ class MedicineStockViewModel: ObservableObject {
     }
     
     func updateFilter(text: String) {
-        currentFilter = text
+        filterText = text
         fetchMedicines()
     }
     
@@ -29,13 +31,16 @@ class MedicineStockViewModel: ObservableObject {
     }
     
     func fetchMedicines() {
-        medicineStockService.fetchMedicines(filterText: filterText, sortOption: sortOption) { [weak self] result in
+        isLoading = true
+        alertMessage = nil
+        medicineStockService.fetchMedicines(filter: filterText, sortOption: sortOption) { [weak self] result in
             DispatchQueue.main.async {
+                self?.isLoading = false
                 switch result {
                 case .success(let medicines):
                     self?.medicines = medicines
                 case .failure(let error):
-                    // add error message
+                    self?.alertMessage = "Failed to load medicines: \(error.localizedDescription)"
                     print("Error fetching medicines: \(error)")
                 }
             }
@@ -43,62 +48,50 @@ class MedicineStockViewModel: ObservableObject {
     }
     
     func fetchAisles() {
-        medicineStockService.fetchAisles { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let aisles):
-                    self?.aisles = aisles
-                case .failure(let error):
-                    print("Error fetching aisles: \(error)")
+        isLoading = true
+        alertMessage = nil
+        Task {
+            do {
+                let aislesFetched = try await medicineStockService.fetchAisles()
+                DispatchQueue.main.async {
+                    self.aisles = aislesFetched
+                    self.isLoading = false
                 }
+            } catch {
+                self.alertMessage = "Error fetching aisles: \(error)"
+                self.isLoading = false
             }
         }
     }
     
-    func addMedicine(name: String, stock: Int, aisle: String, completion: @escaping (Result<String, Error>) -> Void) {
-        medicineStockService.addMedicine(name: name, stock: stock, aisle: aisle) { result in
-            switch result {
-            case .success(let userEmail):
-                let newMedicine = Medicine(name: name, stock: stock, aisle: aisle)
-                
-                self.addHistory(action: "Added \(name)",
-                                user: userEmail,
-                                medicineId: newMedicine.id ?? "",
-                                details: "Added new medicine")
-                
-                self.fetchMedicines()
-                completion(.success("Medicine added successfully"))
-            case .failure(let error): break
-                //set error
+    func addMedicine(name: String, stock: Int, aisle: String) {
+        isLoading = true
+        alertMessage = nil
+        Task {
+            do {
+                try await medicineStockService.addMedicine(name: name, stock: stock, aisle: aisle, currentUserRepository: currentUserRepository)
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.isAdded = true
+                }
+            } catch {
+                isLoading = false
+                alertMessage = "Error adding medicine: \(error)"
+                isAdded = false
             }
         }
     }
     
     func deleteMedicines(at offsets: IndexSet) {
-        offsets.map { medicines[$0] }.forEach { medicine in
-            guard let id = medicine.id else { return }
-            medicineStockService.deleteMedicine(withID: id) { [weak self] error in
-                if let error = error {
+        for index in offsets {
+            let medicine = medicines[index]
+            guard let id = medicine.id else { continue }
+            Task {
+                do {
+                    try await medicineStockService.deleteMedicine(withID: id)
+                    self.medicines.removeAll { $0.id == id }
+                } catch {
                     print("Error removing document: \(error.localizedDescription)")
-                } else {
-                    DispatchQueue.main.async {
-                        self?.medicines.removeAll { $0.id == id }
-                    }
-                }
-            }
-        }
-    }
-    
-    private func addHistory(action: String, user: String, medicineId: String, details: String) {
-        let history = HistoryEntry(medicineId: medicineId, user: user, action: action, details: details)
-        medicineStockService.addHistory(history: history) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success:
-                    print("History added successfully.")
-                case .failure(let error):
-                    print("History added failure.")
-                    //self.errorMessage = error.localizedDescription
                 }
             }
         }

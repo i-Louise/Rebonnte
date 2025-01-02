@@ -8,7 +8,7 @@ struct MedicineDetailView: View {
             if viewModel.isEditing {
                 EditingMedicineDetailView(viewModel: viewModel)
             } else {
-                ReadingMedicineDetailView(viewModel: viewModel, medicine: viewModel.medicine)
+                ReadingMedicineDetailView(viewModel: viewModel)
             }
         }
     }

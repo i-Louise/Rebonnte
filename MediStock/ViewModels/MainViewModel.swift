@@ -17,21 +17,26 @@ class MainViewModel: ObservableObject {
     init(authService: AuthenticationService, currentUserRepository: CurrentUserRepository) {
         self.authService = authService
         self.currentUserRepository = currentUserRepository
-        self.authListenerHandle = authService.listenForAuthChanges { [weak self] user in
-            if let user = user {
-                self?.currentUserRepository.setUser(user)
-            } else {
-                self?.currentUserRepository.clearUser()
-            }
-            DispatchQueue.main.async {
-                self?.currentUser = user
+        Task {
+            let user = await authService.listenForAuthChanges()
+            await MainActor.run {
+                if let user = user {
+                    self.currentUserRepository.setUser(user)
+                    self.currentUser = user
+                } else {
+                    self.currentUserRepository.clearUser()
+                    self.currentUser = nil
+                }
             }
         }
     }
     
     deinit {
-        if let authListenerHandle = authListenerHandle {
-            authService.removeAuthListener(authListenerHandle)
+        if let handle = authListenerHandle {
+            Task { [weak self] in
+                guard let self = self else { return }
+                await self.authService.removeAuthListener(handle: handle)
+            }
         }
     }
 }
