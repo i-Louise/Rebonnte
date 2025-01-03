@@ -2,7 +2,6 @@ import Foundation
 import Firebase
 
 class AuthenticationService: AuthenticationProtocol {
-    @Published var session: User?
     var handle: AuthStateDidChangeListenerHandle?
     
     func signUp(email: String, password: String) async throws -> User {

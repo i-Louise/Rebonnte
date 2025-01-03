@@ -53,6 +53,8 @@
 		73D8F4312D237D41001BC832 /* RegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D8F4302D237D41001BC832 /* RegistrationView.swift */; };
 		73D8F44B2D273D30001BC832 /* ProgressViewCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D8F44A2D273D30001BC832 /* ProgressViewCustom.swift */; };
 		73D8F44D2D28354A001BC832 /* LoginError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D8F44C2D28354A001BC832 /* LoginError.swift */; };
+		73D8F45F2D28A7AA001BC832 /* AuthServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D8F45E2D28A7AA001BC832 /* AuthServiceMock.swift */; };
+		73D8F4612D28AC15001BC832 /* MedicineServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D8F4602D28AC15001BC832 /* MedicineServiceMock.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -111,6 +113,9 @@
 		73D8F4302D237D41001BC832 /* RegistrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationView.swift; sourceTree = "<group>"; };
 		73D8F44A2D273D30001BC832 /* ProgressViewCustom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressViewCustom.swift; sourceTree = "<group>"; };
 		73D8F44C2D28354A001BC832 /* LoginError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginError.swift; sourceTree = "<group>"; };
+		73D8F4502D289CCC001BC832 /* MediStock.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MediStock.xctestplan; sourceTree = "<group>"; };
+		73D8F45E2D28A7AA001BC832 /* AuthServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthServiceMock.swift; sourceTree = "<group>"; };
+		73D8F4602D28AC15001BC832 /* MedicineServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicineServiceMock.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +157,7 @@
 		53E0D88A2C06084700DE1134 = {
 			isa = PBXGroup;
 			children = (
+				73D8F4502D289CCC001BC832 /* MediStock.xctestplan */,
 				53E0D89A2C06084900DE1134 /* Assets.xcassets */,
 				7331BE652D1640A900993CF3 /* GoogleService-Info.plist */,
 				53E0D8952C06084700DE1134 /* MediStock */,
@@ -198,6 +204,7 @@
 		53E0D8A62C06084900DE1134 /* MediStockTests */ = {
 			isa = PBXGroup;
 			children = (
+				73D8F4512D289D7E001BC832 /* Mocks */,
 				53E0D8A72C06084900DE1134 /* MediStockTests.swift */,
 			);
 			path = MediStockTests;
@@ -271,6 +278,15 @@
 				738249672D1F354600763D31 /* AuthenticationProtocol.swift */,
 			);
 			path = Protocols;
+			sourceTree = "<group>";
+		};
+		73D8F4512D289D7E001BC832 /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				73D8F45E2D28A7AA001BC832 /* AuthServiceMock.swift */,
+				73D8F4602D28AC15001BC832 /* MedicineServiceMock.swift */,
+			);
+			path = Mocks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -456,7 +472,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73D8F4612D28AC15001BC832 /* MedicineServiceMock.swift in Sources */,
 				53E0D8A82C06084900DE1134 /* MediStockTests.swift in Sources */,
+				73D8F45F2D28A7AA001BC832 /* AuthServiceMock.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

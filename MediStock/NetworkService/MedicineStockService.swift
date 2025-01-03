@@ -12,7 +12,7 @@ import FirebaseFirestore
 protocol MedicineStockProtocol {
     func fetchMedicines(filter: String?, sortOption: SortOption) async throws -> [Medicine]
     func fetchAisles() async throws -> [String]
-    func addMedicine(name: String, stock: Int, aisle: String, currentUserRepository: CurrentUserRepository) async throws -> Medicine
+    func addMedicine(name: String, stock: Int, aisle: String, currentUserRepository: CurrentUserRepository) async throws
     func deleteMedicine(withID id: String) async throws
     func updateStock(medicineId: String, newStock: Int) async throws
     func updateMedicine(_ medicine: Medicine) async throws
@@ -80,13 +80,12 @@ class MedicineStockService: MedicineStockProtocol {
         }
     }
     
-    func addMedicine(name: String, stock: Int, aisle: String, currentUserRepository: CurrentUserRepository) async throws -> Medicine {
+    func addMedicine(name: String, stock: Int, aisle: String, currentUserRepository: CurrentUserRepository) async throws {
         let medicine = Medicine(name: name, stock: stock, aisle: aisle)
         let medicineID = medicine.id ?? UUID().uuidString
         
         do {
             try db.collection("medicines").document(medicineID).setData(from: medicine)
-            return medicine
         } catch let error {
             throw error
         }
