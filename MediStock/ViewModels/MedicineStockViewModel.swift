@@ -102,11 +102,11 @@ class MedicineStockViewModel: ObservableObject {
         isAdded = false
         Task {
             do {
-                let newMedicine = try await medicineStockService.addMedicine(name: name, stock: stock, aisle: aisle, currentUserRepository: currentUserRepository)
+                try await medicineStockService.addMedicine(name: name, stock: stock, aisle: aisle, currentUserRepository: currentUserRepository)
                 DispatchQueue.main.async {
-                    self.medicines.append(newMedicine)
                     self.isLoading = false
                     self.isAdded = true
+                    self.fetchMedicines()
                 }
             } catch {
                 isLoading = false
