@@ -49,11 +49,13 @@ struct AllMedicinesView: View {
                     }
                 }
                 .navigationBarTitle("All Medicines")
-                .navigationBarItems(trailing: Button(action: {
-                    isShowingAddMedicineSheet = true
-                }) {
-                    Image(systemName: "plus")
-                })
+                .navigationBarItems(
+                    trailing: Button(action: {
+                        isShowingAddMedicineSheet = true
+                    }) {
+                        Image(systemName: "plus")
+                    }
+                )
                 .sheet(isPresented: $isShowingAddMedicineSheet) {
                     AddMedicineView(isShowingAddMedicineSheet: $isShowingAddMedicineSheet)
                         .environmentObject(viewModel)

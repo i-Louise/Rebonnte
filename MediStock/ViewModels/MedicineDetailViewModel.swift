@@ -13,7 +13,7 @@ class MedicineDetailViewModel: ObservableObject {
     @Published var medicine: Medicine
     @Published var medicineCopy: Medicine
     @Published var isEditing: Bool = false
-    @Published var history: [HistoryEntry] = [HistoryEntry(medicineId: "test", user: "User", action: "This is a test", details: "Test")]
+    @Published var history: [HistoryEntry] = []
     @Published var isLoading: Bool = false
     @Published var alertMessage: String? = nil
     
@@ -85,6 +85,7 @@ class MedicineDetailViewModel: ObservableObject {
                 )
                 DispatchQueue.main.async {
                     self.isLoading = false
+                    self.isEditing = false
                 }
             } catch {
                 isLoading = false

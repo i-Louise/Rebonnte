@@ -10,9 +10,9 @@ import Firebase
 import FirebaseFirestore
 
 protocol MedicineStockProtocol {
-    func fetchMedicines(filter: String?, sortOption: SortOption, completion: @escaping (Result<[Medicine], Error>) -> Void)
+    func fetchMedicines(filter: String?, sortOption: SortOption) async throws -> [Medicine]
     func fetchAisles() async throws -> [String]
-    func addMedicine(name: String, stock: Int, aisle: String, currentUserRepository: CurrentUserRepository) async throws
+    func addMedicine(name: String, stock: Int, aisle: String, currentUserRepository: CurrentUserRepository) async throws -> Medicine
     func deleteMedicine(withID id: String) async throws
     func updateStock(medicineId: String, newStock: Int) async throws
     func updateMedicine(_ medicine: Medicine) async throws
@@ -24,35 +24,37 @@ class MedicineStockService: MedicineStockProtocol {
     private let currentUserRepository: CurrentUserRepository = CurrentUserRepository()
     private var db = Firestore.firestore()
     
-    func fetchMedicines(filter: String? = nil, sortOption: SortOption = .none, completion: @escaping (Result<[Medicine], Error>) -> Void) {
+    func fetchMedicines(filter: String? = nil, sortOption: SortOption = .none) async throws -> [Medicine] {
         
-        var query: Query = db.collection("medicines")
-        
-        if let filter = filter, !filter.isEmpty {
-            query = query.whereField("name", isGreaterThanOrEqualTo: filter)
-                .whereField("name", isLessThanOrEqualTo: filter + "\u{f8ff}")
-        }
-        
-        switch sortOption {
-        case .name:
-            query = query.order(by: "name")
-        case .stock:
-            query = query.order(by: "stock")
-        case .none:
-            break
-        }
-        
-        query.addSnapshotListener { snapshot, error in
+        try await withCheckedThrowingContinuation { continuation in
+            var query: Query = db.collection("medicines")
             
-            if let error = error {
-                DispatchQueue.main.async {
-                    completion(.failure(error))
+            if let filter = filter, !filter.isEmpty {
+                query = query.whereField("name", isGreaterThanOrEqualTo: filter)
+                    .whereField("name", isLessThanOrEqualTo: filter + "\u{f8ff}")
+            }
+            
+            switch sortOption {
+            case .name:
+                query = query.order(by: "name")
+            case .stock:
+                query = query.order(by: "stock")
+            case .none:
+                break
+            }
+            
+            query.getDocuments { snapshot, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                    return
                 }
-            } else {
-                let medicines = snapshot?.documents.compactMap { try? $0.data(as: Medicine.self)} ?? []
-                DispatchQueue.main.async {
-                    completion(.success(medicines))
+                guard let snapshot = snapshot else {
+                    continuation.resume(throwing: NSError(domain: "NetworkService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No documents found"]))
+                    return
                 }
+                
+                let medicines = snapshot.documents.compactMap { try? $0.data(as: Medicine.self) }
+                continuation.resume(returning: medicines)
             }
         }
     }
@@ -78,12 +80,13 @@ class MedicineStockService: MedicineStockProtocol {
         }
     }
     
-    func addMedicine(name: String, stock: Int, aisle: String, currentUserRepository: CurrentUserRepository) async throws {
+    func addMedicine(name: String, stock: Int, aisle: String, currentUserRepository: CurrentUserRepository) async throws -> Medicine {
         let medicine = Medicine(name: name, stock: stock, aisle: aisle)
         let medicineID = medicine.id ?? UUID().uuidString
         
         do {
             try db.collection("medicines").document(medicineID).setData(from: medicine)
+            return medicine
         } catch let error {
             throw error
         }

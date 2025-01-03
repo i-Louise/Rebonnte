@@ -13,6 +13,7 @@ struct RegistrationView: View {
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var confirmPassword: String = ""
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         NavigationView {
@@ -28,12 +29,23 @@ struct RegistrationView: View {
                 Section {
                     Button("Register") {
                         viewModel.onSignUpAction(email: email, password: password, confirmPassword: confirmPassword)
+                        if viewModel.isUserRegistered {
+                            dismiss()
+                        }
                     }
                     .disabled(email.isEmpty || password.isEmpty || confirmPassword.isEmpty)
                     .padding(.vertical, 8)
                 }
             }
-        }
+        }.alert(isPresented: $viewModel.isShowingAlert) {
+            Alert(
+                title: Text("An Error occured"),
+                message: Text(viewModel.alertMessage ?? ""),
+                dismissButton: .default(Text("OK"))
+            )
+        }.overlay(
+            ProgressViewCustom(isLoading: viewModel.isLoading)
+        )
     }
 }
 

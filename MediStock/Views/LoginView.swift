@@ -22,7 +22,7 @@ struct LoginView: View {
                 .accessibilityIdentifier("emailTextField")
             PasswordEntryFieldView(password: $password, placeHolder: "Password")
             Button(action: {
-                viewModel.signIn(email: email, password: password)
+                viewModel.onLoginAction(email: email, password: password)
             }) {
                 Text("Login")
                     .padding()
@@ -31,6 +31,8 @@ struct LoginView: View {
                     .foregroundColor(.white)
                     .cornerRadius(30)
             }
+            .disabled(email.isEmpty || password.isEmpty)
+
             Button(action: {
                 showPopover = true
             }) {
@@ -41,6 +43,16 @@ struct LoginView: View {
             }
         }
         .padding()
+        .alert(isPresented: $viewModel.showingAlert) {
+            Alert(
+                title: Text("An Error occured"),
+                message: Text(viewModel.alertMessage ?? ""),
+                dismissButton: .default(Text("OK"))
+            )
+        }
+        .overlay(
+            ProgressViewCustom(isLoading: viewModel.isLoading)
+        )
     }
 }
 

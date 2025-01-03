@@ -14,6 +14,8 @@ class RegistrationViewModel: ObservableObject {
     @Published var passwordErrorMessage: String? = nil
     @Published var confirmPasswordErrorMessage: String? = nil
     @Published var alertMessage: String? = nil
+    @Published var errorMessage: String? = nil
+    @Published var isShowingAlert: Bool = false
     
     private let authenticationService: AuthenticationProtocol
     
@@ -43,9 +45,16 @@ class RegistrationViewModel: ObservableObject {
                 let user = try await authenticationService.signUp(email: email, password: password)
                 self.isUserRegistered = true
                 self.isLoading = false
+            } catch let error as AuthError {
+                DispatchQueue.main.async {
+                    self.alertMessage = error.errorDescription
+                    self.isShowingAlert = true
+                    self.isLoading = false
+                }
             } catch {
                 self.isUserRegistered = false
                 self.alertMessage = "Failed to sign up: \(error.localizedDescription)"
+                self.isShowingAlert = true
             }
         }
     }

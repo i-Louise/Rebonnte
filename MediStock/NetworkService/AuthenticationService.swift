@@ -8,9 +8,13 @@ class AuthenticationService: AuthenticationProtocol {
     func signUp(email: String, password: String) async throws -> User {
         
         return try await withCheckedThrowingContinuation { continuation in
-            Auth.auth().createUser(withEmail: email, password: password) { result, error in
-                if let error = error {
-                    continuation.resume(throwing: error)
+            Auth.auth().createUser(withEmail: email, password: password) { [self] result, error in
+                if let error = error as NSError? {
+                    if let authError = AuthErrorCode.Code(rawValue: error.code) {
+                        continuation.resume(throwing: mapAuthError(authError))
+                    } else {
+                        continuation.resume(throwing: AuthError.unknownError(error.localizedDescription))
+                    }
                 } else if let firebaseUser = result?.user {
                     let user = User(uid: firebaseUser.uid, email: firebaseUser.email)
                     continuation.resume(returning: user)
@@ -26,8 +30,10 @@ class AuthenticationService: AuthenticationProtocol {
         
         return try await withCheckedThrowingContinuation { continuation in
             Auth.auth().signIn(withEmail: email, password: password) { result, error in
-                if let error = error {
-                    continuation.resume(throwing: error)
+                if let error = error as NSError? {
+                    if let authError = AuthErrorCode.Code(rawValue: error.code) {
+                        continuation.resume(throwing: self.mapAuthError(authError))
+                    }
                 } else if let firebaseUser = result?.user {
                     let user = User(uid: firebaseUser.uid, email: firebaseUser.email)
                     continuation.resume(returning: user)
@@ -52,10 +58,8 @@ class AuthenticationService: AuthenticationProtocol {
     
     func listenForAuthChanges() async -> User? {
         await withCheckedContinuation { continuation in
-            // Add a state listener
             var handle: AuthStateDidChangeListenerHandle?
             handle = Auth.auth().addStateDidChangeListener { _, firebaseUser in
-                // Ensure the continuation is resumed only once
                 if let firebaseUser = firebaseUser {
                     let user = User(uid: firebaseUser.uid, email: firebaseUser.email)
                     continuation.resume(returning: user)
@@ -63,19 +67,32 @@ class AuthenticationService: AuthenticationProtocol {
                     continuation.resume(returning: nil)
                 }
                 
-                // Remove the listener to prevent multiple invocations
                 if let handle = handle {
                     Auth.auth().removeStateDidChangeListener(handle)
                 }
             }
         }
     }
-
+    
     
     func removeAuthListener(handle: AuthStateDidChangeListenerHandle) async {
         await withCheckedContinuation { continuation in
             Auth.auth().removeStateDidChangeListener(handle)
             continuation.resume()
+        }
+    }
+    private func mapAuthError(_ authErrorCode: AuthErrorCode.Code) -> AuthError {
+        switch authErrorCode {
+        case .invalidCredential:
+            return .invalidCredentials
+        case .networkError:
+            return .networkIssue
+        case .userNotFound:
+            return .userNotFound
+        case .emailAlreadyInUse:
+            return .emailAlreadyInUse
+        default:
+            return .unknownError("An unknown error occurred. Please try again.")
         }
     }
 }

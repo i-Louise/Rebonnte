@@ -39,13 +39,24 @@ struct AddMedicineView: View {
                 isShowingAddMedicineSheet = false
             }), trailing: Button("Add") {
                 viewModel.addMedicine(name: name, stock: stock, aisle: aisle)
-                if viewModel.isAdded {
-                    dismiss()
-                }
             }
                 .disabled(name.isEmpty || aisle.isEmpty || stock == 0)
             )
+            .onChange(of: viewModel.isAdded) { newValue in
+                if newValue {
+                    isShowingAddMedicineSheet = false
+                }
+            }
         }
+        .alert(isPresented: $viewModel.isShowingAlert) {
+            Alert(
+                title: Text("An Error occured"),
+                message: Text(viewModel.alertMessage ?? ""),
+                dismissButton: .default(Text("OK"))
+            )
+        }.overlay(
+            ProgressViewCustom(isLoading: viewModel.isLoading)
+        )
     }
 }
 

@@ -27,6 +27,18 @@ struct AisleListView: View {
         .onAppear {
             viewModel.fetchAisles()
         }
+        .alert(isPresented: $viewModel.isShowingAlert) {
+            Alert(
+                title: Text("An Error occured"),
+                message: Text(viewModel.alertMessage ?? ""),
+                primaryButton: .default(Text("Retry")) {
+                    viewModel.fetchAisles()
+                },
+                secondaryButton: .cancel()
+            )
+        }.overlay(
+            ProgressViewCustom(isLoading: viewModel.isLoading)
+        )
     }
 }
 

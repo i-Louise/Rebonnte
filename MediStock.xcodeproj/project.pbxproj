@@ -51,6 +51,8 @@
 		7382497C2D231C2600763D31 /* EditingMedicineDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382497B2D231C2600763D31 /* EditingMedicineDetailView.swift */; };
 		73D8F42F2D2374AE001BC832 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D8F42E2D2374AE001BC832 /* UserProfileView.swift */; };
 		73D8F4312D237D41001BC832 /* RegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D8F4302D237D41001BC832 /* RegistrationView.swift */; };
+		73D8F44B2D273D30001BC832 /* ProgressViewCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D8F44A2D273D30001BC832 /* ProgressViewCustom.swift */; };
+		73D8F44D2D28354A001BC832 /* LoginError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D8F44C2D28354A001BC832 /* LoginError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +109,8 @@
 		7382497B2D231C2600763D31 /* EditingMedicineDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditingMedicineDetailView.swift; sourceTree = "<group>"; };
 		73D8F42E2D2374AE001BC832 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
 		73D8F4302D237D41001BC832 /* RegistrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationView.swift; sourceTree = "<group>"; };
+		73D8F44A2D273D30001BC832 /* ProgressViewCustom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressViewCustom.swift; sourceTree = "<group>"; };
+		73D8F44C2D28354A001BC832 /* LoginError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -221,6 +225,7 @@
 				738249752D22230600763D31 /* AddMedicineView.swift */,
 				73D8F42E2D2374AE001BC832 /* UserProfileView.swift */,
 				73D8F4302D237D41001BC832 /* RegistrationView.swift */,
+				73D8F44A2D273D30001BC832 /* ProgressViewCustom.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -245,6 +250,7 @@
 				53E0D8E92C066F7A00DE1134 /* HistoryEntry.swift */,
 				738249582D1F31FE00763D31 /* User.swift */,
 				7382496F2D21BD1600763D31 /* CurrentUserRepository.swift */,
+				73D8F44C2D28354A001BC832 /* LoginError.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -421,9 +427,11 @@
 				738249702D21BD1600763D31 /* CurrentUserRepository.swift in Sources */,
 				73D8F42F2D2374AE001BC832 /* UserProfileView.swift in Sources */,
 				53E0D8D82C06097900DE1134 /* LoginView.swift in Sources */,
+				73D8F44D2D28354A001BC832 /* LoginError.swift in Sources */,
 				7382497C2D231C2600763D31 /* EditingMedicineDetailView.swift in Sources */,
 				53E0D8EA2C066F7A00DE1134 /* HistoryEntry.swift in Sources */,
 				7382496A2D1F58BF00763D31 /* LoginViewModel.swift in Sources */,
+				73D8F44B2D273D30001BC832 /* ProgressViewCustom.swift in Sources */,
 				7382497A2D231C1100763D31 /* ReadingMedicineDetailView.swift in Sources */,
 				53E0D8E02C0609B900DE1134 /* AuthenticationService.swift in Sources */,
 				73D8F4312D237D41001BC832 /* RegistrationView.swift in Sources */,
