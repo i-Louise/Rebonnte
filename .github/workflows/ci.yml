@@ -1,32 +1,49 @@
----
 name: iOS Build and Test
 on:
   pull_request:
     branches:
       - main
+
 jobs:
   build-and-test:
     runs-on: macos-latest
     
     steps:
+      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
+      # Step 2: Set up Xcode
+      - name: Set up Xcode
+        uses: macos-setup-xcode@v2
+        with:
+          xcode-version: '16.1'
+      
       - name: Create test results directory
         run: mkdir -p TestResults
         
-      - name: Set up simulator
-        run: xcrun simctl boot "iPhone 15" || true
+      - name: Boot iPhone Simulator
+        run: |
+          xcrun simctl boot "iPhone 15"
+          xcrun simctl bootstatus "iPhone 15" || exit 1
+
+      - name: Install dependencies
+        run: |
+          if [ -f "Podfile" ]; then
+            pod install
+          elif [ -f "Package.swift" ]; then
+            swift package resolve
+          fi
         
       - name: Build and Test
-        uses: sersoft-gmbh/xcodebuild-action@v3.2.0
-        with:
-          project: MediStock.xcodeproj
-          scheme: MediStock
-          destination: 'platform=iOS Simulator,name=iPhone 15'
-          action: test
-          result-bundle-path: 'TestResults/TestResults.xcresult'
-          
+        run: |
+          xcodebuild clean test \
+            -project MediStock.xcodeproj \
+            -scheme MediStock \
+            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            -resultBundlePath 'TestResults/TestResults.xcresult' \
+            -quiet
+
       - name: Check if Test Results Exist
         run: |
           if [ -d "TestResults/TestResults.xcresult" ]; then
@@ -35,10 +52,9 @@ jobs:
             echo "Test results not found."
             exit 1
           fi
-          
+
       - name: Process Test Results
         uses: kishikawakatsumi/xcresulttool@v1
         with:
           path: TestResults/TestResults.xcresult
         if: success() || failure()
-
