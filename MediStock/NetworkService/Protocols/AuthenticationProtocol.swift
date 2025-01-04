@@ -12,6 +12,4 @@ protocol AuthenticationProtocol {
     func signIn(email: String, password: String) async throws -> User
     func signUp(email: String, password: String) async throws -> User
     func signOut() async throws
-    func listenForAuthChanges() async -> User?
-    func removeAuthListener(handle: AuthStateDidChangeListenerHandle) async
 }

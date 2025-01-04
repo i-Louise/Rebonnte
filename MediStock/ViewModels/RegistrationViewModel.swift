@@ -35,7 +35,6 @@ class RegistrationViewModel: ObservableObject {
         } else {
             signUp(email: email, password: password)
         }
-
     }
     
     private func signUp(email: String, password: String) {

@@ -16,6 +16,8 @@ class MedicineServiceMock: MedicineStockProtocol {
     var deleteMedicineCalled: Bool = false
     var stock = 0
     var historyEntries: [HistoryEntry] = []
+    var addedMedicineSucceed: Bool = false
+    var updateMedicineSucceed: Bool = false
     
     func fetchMedicines(filter: String?, sortOption: MediStock.SortOption) async throws -> [Medicine] {
         if shouldSucceed {
@@ -34,9 +36,11 @@ class MedicineServiceMock: MedicineStockProtocol {
     }
     
     func addMedicine(name: String, stock: Int, aisle: String, currentUserRepository: MediStock.CurrentUserRepository) async throws {
+        serviceIsCalled = true
         if shouldSucceed {
-            serviceIsCalled = true
+            addedMedicineSucceed = true
         } else {
+            addedMedicineSucceed = false
             throw NSError(domain: "MockMedicineStockService", code: 3, userInfo: [NSLocalizedDescriptionKey: "Failed to add medicine"])
         }
     }
@@ -58,8 +62,9 @@ class MedicineServiceMock: MedicineStockProtocol {
     }
     
     func updateMedicine(_ medicine: MediStock.Medicine) async throws {
+        serviceIsCalled = true
         if shouldSucceed {
-            serviceIsCalled = true
+            updateMedicineSucceed = true
         } else {
             throw NSError(domain: "MockMedicineStockService", code: 6, userInfo: [NSLocalizedDescriptionKey: "Failed to update medicine"])
         }

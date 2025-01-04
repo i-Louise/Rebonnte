@@ -55,6 +55,23 @@ class AuthenticationService: AuthenticationProtocol {
         }
     }
     
+    private func mapAuthError(_ authErrorCode: AuthErrorCode.Code) -> AuthError {
+        switch authErrorCode {
+        case .invalidCredential:
+            return .invalidCredentials
+        case .networkError:
+            return .networkIssue
+        case .userNotFound:
+            return .userNotFound
+        case .emailAlreadyInUse:
+            return .emailAlreadyInUse
+        default:
+            return .unknownError("An unknown error occurred. Please try again.")
+        }
+    }
+}
+
+extension AuthenticationService {
     func listenForAuthChanges() async -> User? {
         await withCheckedContinuation { continuation in
             var handle: AuthStateDidChangeListenerHandle?
@@ -78,20 +95,6 @@ class AuthenticationService: AuthenticationProtocol {
         await withCheckedContinuation { continuation in
             Auth.auth().removeStateDidChangeListener(handle)
             continuation.resume()
-        }
-    }
-    private func mapAuthError(_ authErrorCode: AuthErrorCode.Code) -> AuthError {
-        switch authErrorCode {
-        case .invalidCredential:
-            return .invalidCredentials
-        case .networkError:
-            return .networkIssue
-        case .userNotFound:
-            return .userNotFound
-        case .emailAlreadyInUse:
-            return .emailAlreadyInUse
-        default:
-            return .unknownError("An unknown error occurred. Please try again.")
         }
     }
 }

@@ -6,27 +6,28 @@
 //
 
 import Foundation
-import FirebaseAuth
 @testable import MediStock
 
 class AuthServiceMock: AuthenticationProtocol {
     var shouldSucceed: Bool = true
     var loginSucceed: Bool = false
     var isSignOut: Bool = false
-    var mockUser: User?
-    var handle: AuthStateDidChangeListenerHandle?
+    var isServiceCalled: Bool = false
+    var mockUser: User = User(uid: "mock")
 
     func signIn(email: String, password: String) async throws -> User {
         if shouldSucceed {
-            return mockUser ?? User(uid: "fakeUid", email: "fakeEmail")
+            isServiceCalled = true
+            return mockUser
         } else {
             throw AuthError.unknownError("Mocked error during sign up")
         }
     }
     
     func signUp(email: String, password: String) async throws -> User {
+        isServiceCalled = true
         if shouldSucceed {
-            return mockUser ?? User(uid: "fakeUid", email: "fakeEmail")
+            return mockUser
         } else {
             throw AuthError.unknownError("Mocked error during sign up")
         }
@@ -39,16 +40,7 @@ class AuthServiceMock: AuthenticationProtocol {
             throw AuthError.unknownError("Mocked error during sign out")
         }
     }
-    
-    func listenForAuthChanges() async -> User? {
-        if shouldSucceed {
-            return mockUser ?? User(uid: "fakeUid", email: "fakeEmail")
-        } else {
-            return nil
-        }
-    }
-    
-    func removeAuthListener(handle: AuthStateDidChangeListenerHandle) async {}
+
     
     
 }

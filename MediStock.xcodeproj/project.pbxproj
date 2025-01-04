@@ -55,6 +55,7 @@
 		73D8F44D2D28354A001BC832 /* LoginError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D8F44C2D28354A001BC832 /* LoginError.swift */; };
 		73D8F45F2D28A7AA001BC832 /* AuthServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D8F45E2D28A7AA001BC832 /* AuthServiceMock.swift */; };
 		73D8F4612D28AC15001BC832 /* MedicineServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D8F4602D28AC15001BC832 /* MedicineServiceMock.swift */; };
+		73D8F4632D28B11E001BC832 /* RegistrationViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D8F4622D28B11E001BC832 /* RegistrationViewModelTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,6 +117,7 @@
 		73D8F4502D289CCC001BC832 /* MediStock.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MediStock.xctestplan; sourceTree = "<group>"; };
 		73D8F45E2D28A7AA001BC832 /* AuthServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthServiceMock.swift; sourceTree = "<group>"; };
 		73D8F4602D28AC15001BC832 /* MedicineServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicineServiceMock.swift; sourceTree = "<group>"; };
+		73D8F4622D28B11E001BC832 /* RegistrationViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewModelTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -206,6 +208,7 @@
 			children = (
 				73D8F4512D289D7E001BC832 /* Mocks */,
 				53E0D8A72C06084900DE1134 /* MediStockTests.swift */,
+				73D8F4622D28B11E001BC832 /* RegistrationViewModelTests.swift */,
 			);
 			path = MediStockTests;
 			sourceTree = "<group>";
@@ -474,6 +477,7 @@
 			files = (
 				73D8F4612D28AC15001BC832 /* MedicineServiceMock.swift in Sources */,
 				53E0D8A82C06084900DE1134 /* MediStockTests.swift in Sources */,
+				73D8F4632D28B11E001BC832 /* RegistrationViewModelTests.swift in Sources */,
 				73D8F45F2D28A7AA001BC832 /* AuthServiceMock.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
