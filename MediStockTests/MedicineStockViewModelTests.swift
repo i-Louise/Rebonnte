@@ -40,7 +40,7 @@ final class MedicineStockViewModelTests: XCTestCase {
             XCTAssertTrue(self.mockService.serviceIsCalled, "fetchMedicines should be called.")
             expectations.fulfill()
         }
-        wait(for: [expectation], timeout: 1.0)
+        wait(for: [expectations], timeout: 1.0)
     }
     
     func testUpdateSorting() {
@@ -58,7 +58,7 @@ final class MedicineStockViewModelTests: XCTestCase {
             XCTAssertTrue(self.mockService.serviceIsCalled, "fetchMedicines should be called.")
             expectations.fulfill()
         }
-        wait(for: [expectation], timeout: 1.0)
+        wait(for: [expectations], timeout: 1.0)
     }
     
     func testFetchMedicinesSuccess() {
