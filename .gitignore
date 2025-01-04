@@ -1,3 +1,5 @@
 GoogleService-Info.plist
-MediStock.xcodeproj/project.xcworkspace/xcuserdata/
 
+# Ignore Xcode workspace user data
+*.xcuserstate
+xcuserdata/

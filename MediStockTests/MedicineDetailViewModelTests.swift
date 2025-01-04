@@ -11,18 +11,22 @@ import XCTest
 final class MedicineDetailViewModelTests: XCTestCase {
     var viewModel: MedicineDetailViewModel!
     var mockService: MedicineServiceMock!
-    var currentUserRepository = CurrentUserRepository()
+    var currentUserRepository: MockCurrentUserRepository!
     var medicine: Medicine?
 
     override func setUp() {
         super.setUp()
         mockService = MedicineServiceMock()
+        currentUserRepository = MockCurrentUserRepository()
+        let mockUser = User(uid: "mock", email: "test@example.com")
+        currentUserRepository.setUser(mockUser)
         viewModel = MedicineDetailViewModel(networkService: mockService, medicine: medicine ?? Medicine(name: "mock", stock: 0, aisle: "1"), currentUserRepository: currentUserRepository)
     }
     
     override func tearDown() {
         viewModel = nil
         mockService = nil
+        currentUserRepository = nil
         super.tearDown()
     }
 
@@ -83,12 +87,13 @@ final class MedicineDetailViewModelTests: XCTestCase {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             XCTAssertTrue(self.mockService.serviceIsCalled, "updateMedicine should be called on the network service")
             XCTAssertFalse(self.mockService.updateMedicineSucceed, "updateMedicine should fail")
-            XCTAssertNotNil(self.viewModel.alertMessage)
-            XCTAssertTrue(self.viewModel.isShowingAlert)
+            XCTAssertNotNil(self.viewModel.alertMessage, "an alert message should be set")
+            XCTAssertTrue(self.viewModel.isShowingAlert, "the alert should be shown")
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 1.0)
     }
+    
     func testFetchHistorySuccessfully() {
         // Given
         let mockMedicine = Medicine(id: "1", name: "Aspirin", stock: 100, aisle: "A1")
@@ -136,4 +141,20 @@ final class MedicineDetailViewModelTests: XCTestCase {
         wait(for: [expectation], timeout: 1.0)
     }
     
+}
+
+class MockCurrentUserRepository: CurrentUserProtocol {
+    private var user: User?
+
+    func setUser(_ user: MediStock.User) {
+        self.user = user
+    }
+    
+    func clearUser() {
+        self.user = nil
+    }
+    
+    func getUser() -> User? {
+        return user
+    }
 }
