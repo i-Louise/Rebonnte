@@ -16,11 +16,11 @@ class AuthServiceMock: AuthenticationProtocol {
     var mockUser: User = User(uid: "mock")
 
     func signIn(email: String, password: String) async throws -> User {
+        isServiceCalled = true
         if shouldSucceed {
-            isServiceCalled = true
             return mockUser
         } else {
-            throw AuthError.unknownError("Mocked error during sign up")
+            throw AuthError.invalidCredentials
         }
     }
     
@@ -34,6 +34,7 @@ class AuthServiceMock: AuthenticationProtocol {
     }
     
     func signOut() async throws {
+        isServiceCalled = true
         if shouldSucceed {
             isSignOut = true
         } else {

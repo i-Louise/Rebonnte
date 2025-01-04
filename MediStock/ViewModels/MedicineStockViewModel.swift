@@ -14,12 +14,12 @@ class MedicineStockViewModel: ObservableObject {
     @Published var isShowingAlert: Bool = false
     private var db = Firestore.firestore()
     private let currentUserRepository: CurrentUserRepository
-    private let medicineStockService: MedicineStockService
+    private let medicineStockService: MedicineStockProtocol
     private var lastDocument: DocumentSnapshot?
     private var noMoreItems: Bool = false
 
     
-    init(currentUserRepository: CurrentUserRepository, medicineStockService: MedicineStockService) {
+    init(currentUserRepository: CurrentUserRepository, medicineStockService: MedicineStockProtocol) {
         self.currentUserRepository = currentUserRepository
         self.medicineStockService = medicineStockService
     }
@@ -39,26 +39,6 @@ class MedicineStockViewModel: ObservableObject {
         sortOption = option
         fetchMedicines()
     }
-    
-//    func fetchMedicines() {
-//        guard !isLoading && !noMoreItems else { return }
-//        isLoading = true
-//        alertMessage = nil
-//        medicineStockService.fetchMedicines(filter: filterText, sortOption: sortOption, lastDocument: lastDocument) { [weak self] result in
-//            DispatchQueue.main.async {
-//                switch result {
-//                case .success(let (medicines, lastDoc)):
-//                    self?.medicines.append(contentsOf: medicines)
-//                    self?.lastDocument = lastDoc
-//                    self?.isLoading = false
-//                case .failure(let error):
-//                    self?.alertMessage = "Failed to load medicines: \(error.localizedDescription)"
-//                    self?.isLoading = false
-//                    self?.isShowingAlert = true
-//                }
-//            }
-//        }
-//    }
     
     func fetchMedicines() {
         isLoading = true

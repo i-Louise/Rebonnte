@@ -20,6 +20,7 @@ class MedicineServiceMock: MedicineStockProtocol {
     var updateMedicineSucceed: Bool = false
     
     func fetchMedicines(filter: String?, sortOption: MediStock.SortOption) async throws -> [Medicine] {
+        serviceIsCalled = true
         if shouldSucceed {
             return fetchedMedicines
         } else {
@@ -71,6 +72,7 @@ class MedicineServiceMock: MedicineStockProtocol {
     }
     
     func addHistory(history: MediStock.HistoryEntry) async throws {
+        serviceIsCalled = true
         if shouldSucceed {
             historyEntries.append(history)
         } else {
@@ -79,6 +81,7 @@ class MedicineServiceMock: MedicineStockProtocol {
     }
     
     func fetchHistory(for medicineId: String) async throws -> [MediStock.HistoryEntry] {
+        serviceIsCalled = true
         if shouldSucceed {
             return historyEntries
         } else {

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class CurrentUserRepository {
+class CurrentUserRepository: CurrentUserProtocol {
     private var user: User?
     
     func setUser(_ user: User) {
@@ -25,4 +25,10 @@ class CurrentUserRepository {
             self.user = nil
         }
     }
+}
+
+protocol CurrentUserProtocol {
+    func setUser(_ user: User)
+    func getUser() -> User?
+    func clearUser()
 }

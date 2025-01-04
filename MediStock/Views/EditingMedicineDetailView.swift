@@ -35,7 +35,15 @@ struct EditingMedicineDetailView: View {
                     viewModel.onDoneAction()
                 }
             }
-        }
+        }.alert(isPresented: $viewModel.isShowingAlert) {
+            Alert(
+                title: Text("An Error occured"),
+                message: Text(viewModel.alertMessage ?? ""),
+                dismissButton: .default(Text("OK"))
+            )
+        }.overlay(
+            ProgressViewCustom(isLoading: viewModel.isLoading)
+        )
     }
 }
 

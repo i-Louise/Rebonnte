@@ -8,7 +8,7 @@
 import Foundation
 
 class MedicineDetailViewModel: ObservableObject {
-    private let networkService: MedicineStockService
+    private let networkService: MedicineStockProtocol
     private let currentUserRepository: CurrentUserRepository
     @Published var medicine: Medicine
     @Published var medicineCopy: Medicine
@@ -16,8 +16,9 @@ class MedicineDetailViewModel: ObservableObject {
     @Published var history: [HistoryEntry] = []
     @Published var isLoading: Bool = false
     @Published var alertMessage: String? = nil
+    @Published var isShowingAlert: Bool = false
     
-    init(networkService: MedicineStockService, medicine: Medicine, currentUserRepository: CurrentUserRepository) {
+    init(networkService: MedicineStockProtocol, medicine: Medicine, currentUserRepository: CurrentUserRepository) {
         self.networkService = networkService
         self.medicine = medicine
         self.medicineCopy = medicine
@@ -90,11 +91,13 @@ class MedicineDetailViewModel: ObservableObject {
             } catch {
                 isLoading = false
                 alertMessage = "Error updating medicine: \(error)"
+                isShowingAlert = true
             }
         }
     }
     
     private func addHistory(action: String, user: String, medicineId: String, details: String) async {
+        isLoading = false
         let history = HistoryEntry(medicineId: medicineId, user: user, action: action, details: details)
         do {
             try await networkService.addHistory(history: history)
@@ -104,6 +107,7 @@ class MedicineDetailViewModel: ObservableObject {
     }
     
     func fetchHistory(for medicine: Medicine) {
+        isLoading = false
         alertMessage = nil
         guard let medicineId = medicine.id else { return }
         Task {
@@ -114,9 +118,9 @@ class MedicineDetailViewModel: ObservableObject {
                     print("fetchHistory succeded, history: \(self.history.count)")
                 }
             } catch let error {
-                print("An error has occurred while fetching history: \(error)")
                 DispatchQueue.main.async {
-                    self.alertMessage = error.localizedDescription
+                    self.alertMessage = "An error occured while fetching history"
+                    self.isShowingAlert = true
                 }
             }
         }

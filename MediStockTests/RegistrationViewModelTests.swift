@@ -63,15 +63,18 @@ final class RegistrationViewModelTests: XCTestCase {
     }
     
     func testOnSignUpAction_ValidInputs() {
+        let expectation = XCTestExpectation()
         let mockUser = User(uid: "mock-uid-123", email: "test@example.com")
         mockService.mockUser = mockUser
         mockService.shouldSucceed = true
         
         viewModel.onSignUpAction(email: mockUser.email!, password: "Password1!", confirmPassword: "Password1!")
         
-        XCTAssertTrue(mockService.isServiceCalled)
-        XCTAssertFalse(viewModel.isShowingAlert)
-        XCTAssertNil(viewModel.alertMessage)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            XCTAssertTrue(self.mockService.isServiceCalled)
+            XCTAssertFalse(self.viewModel.isShowingAlert)
+            XCTAssertNil(self.viewModel.alertMessage)
+        }
     }
     
     func testOnSignUpAction_ValidInputs_Failure() {
