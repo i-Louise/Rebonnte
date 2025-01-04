@@ -11,6 +11,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        
+      - name: Decode GoogleService-Info.plist from secret
+        run: |
+          echo "$GOOGLESERVICE_INFO_PLIST" | base64 --decode > GoogleService-Info.plist
+        env:
+          GOOGLESERVICE_INFO_PLIST: ${{ secrets.GOOGLESERVICE_INFO_PLIST }}
 
       - name: Create test results directory
         run: mkdir -p TestResults
