@@ -11,7 +11,6 @@
 		53E0D8992C06084700DE1134 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E0D8982C06084700DE1134 /* ContentView.swift */; };
 		53E0D89B2C06084900DE1134 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53E0D89A2C06084900DE1134 /* Assets.xcassets */; };
 		53E0D89E2C06084900DE1134 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53E0D89D2C06084900DE1134 /* Preview Assets.xcassets */; };
-		53E0D8A82C06084900DE1134 /* MediStockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E0D8A72C06084900DE1134 /* MediStockTests.swift */; };
 		53E0D8B22C06084900DE1134 /* MediStockUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E0D8B12C06084900DE1134 /* MediStockUITests.swift */; };
 		53E0D8B42C06084900DE1134 /* MediStockUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E0D8B32C06084900DE1134 /* MediStockUITestsLaunchTests.swift */; };
 		53E0D8C22C06092E00DE1134 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 53E0D8C12C06092E00DE1134 /* FirebaseAnalytics */; };
@@ -85,7 +84,6 @@
 		53E0D89A2C06084900DE1134 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		53E0D89D2C06084900DE1134 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		53E0D8A32C06084900DE1134 /* MediStockTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MediStockTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		53E0D8A72C06084900DE1134 /* MediStockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediStockTests.swift; sourceTree = "<group>"; };
 		53E0D8AD2C06084900DE1134 /* MediStockUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MediStockUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		53E0D8B12C06084900DE1134 /* MediStockUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediStockUITests.swift; sourceTree = "<group>"; };
 		53E0D8B32C06084900DE1134 /* MediStockUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediStockUITestsLaunchTests.swift; sourceTree = "<group>"; };
@@ -117,7 +115,7 @@
 		73D8F4302D237D41001BC832 /* RegistrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationView.swift; sourceTree = "<group>"; };
 		73D8F44A2D273D30001BC832 /* ProgressViewCustom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressViewCustom.swift; sourceTree = "<group>"; };
 		73D8F44C2D28354A001BC832 /* LoginError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginError.swift; sourceTree = "<group>"; };
-		73D8F4502D289CCC001BC832 /* MediStock.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MediStock.xctestplan; sourceTree = "<group>"; };
+		73D8F4502D289CCC001BC832 /* MediStocktestplan2.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = file; path = MediStocktestplan2.xctestplan; sourceTree = "<group>"; };
 		73D8F45E2D28A7AA001BC832 /* AuthServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthServiceMock.swift; sourceTree = "<group>"; };
 		73D8F4602D28AC15001BC832 /* MedicineServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicineServiceMock.swift; sourceTree = "<group>"; };
 		73D8F4622D28B11E001BC832 /* RegistrationViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewModelTests.swift; sourceTree = "<group>"; };
@@ -165,7 +163,7 @@
 		53E0D88A2C06084700DE1134 = {
 			isa = PBXGroup;
 			children = (
-				73D8F4502D289CCC001BC832 /* MediStock.xctestplan */,
+				73D8F4502D289CCC001BC832 /* MediStocktestplan2.xctestplan */,
 				53E0D89A2C06084900DE1134 /* Assets.xcassets */,
 				7331BE652D1640A900993CF3 /* GoogleService-Info.plist */,
 				53E0D8952C06084700DE1134 /* MediStock */,
@@ -213,7 +211,6 @@
 			isa = PBXGroup;
 			children = (
 				73D8F4512D289D7E001BC832 /* Mocks */,
-				53E0D8A72C06084900DE1134 /* MediStockTests.swift */,
 				73D8F4622D28B11E001BC832 /* RegistrationViewModelTests.swift */,
 				73D8F4642D28BA76001BC832 /* LoginViewModelTests.swift */,
 				73D8F4662D28C2F3001BC832 /* MedicineStockViewModelTests.swift */,
@@ -487,7 +484,6 @@
 				73D8F4652D28BA76001BC832 /* LoginViewModelTests.swift in Sources */,
 				73D8F4612D28AC15001BC832 /* MedicineServiceMock.swift in Sources */,
 				73D8F4692D28C8E1001BC832 /* MedicineDetailViewModelTests.swift in Sources */,
-				53E0D8A82C06084900DE1134 /* MediStockTests.swift in Sources */,
 				73D8F4672D28C2F3001BC832 /* MedicineStockViewModelTests.swift in Sources */,
 				73D8F4632D28B11E001BC832 /* RegistrationViewModelTests.swift in Sources */,
 				73D8F45F2D28A7AA001BC832 /* AuthServiceMock.swift in Sources */,

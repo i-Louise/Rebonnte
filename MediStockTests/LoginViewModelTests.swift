@@ -55,6 +55,7 @@ final class LoginViewModelTests: XCTestCase {
             XCTAssertNil(self.viewModel.alertMessage)
             expectation.fulfill()
         }
+        await fulfillment(of: [expectation])
     }
     
     func test_signIn_failure_setsAlertMessage() async {
@@ -75,6 +76,7 @@ final class LoginViewModelTests: XCTestCase {
             XCTAssertTrue(self.viewModel.showingAlert)
             expectation.fulfill()
         }
+        await fulfillment(of: [expectation])
     }
 
 }

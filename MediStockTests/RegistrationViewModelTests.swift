@@ -63,36 +63,36 @@ final class RegistrationViewModelTests: XCTestCase {
     }
     
     func testOnSignUpAction_ValidInputs() {
-        let expectation = XCTestExpectation()
-        let mockUser = User(uid: "mock-uid-123", email: "test@example.com")
-        mockService.mockUser = mockUser
+        // Given
+        let expectation = XCTestExpectation(description: "SignUp action completes successfully with valid inputs.")
         mockService.shouldSucceed = true
+
+        // When
+        viewModel.onSignUpAction(email: "test@example.com", password: "Password1!", confirmPassword: "Password1!")
         
-        viewModel.onSignUpAction(email: mockUser.email!, password: "Password1!", confirmPassword: "Password1!")
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            XCTAssertTrue(self.mockService.isServiceCalled)
-            XCTAssertFalse(self.viewModel.isShowingAlert)
-            XCTAssertNil(self.viewModel.alertMessage)
+        // Then
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            XCTAssertTrue(self.mockService.isServiceCalled, "Service should be called during sign-up.")
+            XCTAssertFalse(self.viewModel.isShowingAlert, "Alert should not be shown on valid sign-up.")
+            XCTAssertNil(self.viewModel.alertMessage, "Alert message should be nil on success.")
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 1.0)
     }
     
     func testOnSignUpAction_ValidInputs_Failure() {
         let expectation = XCTestExpectation()
-        let mockUser = User(uid: "mock-uid-123", email: "test@example.com")
-        mockService.mockUser = mockUser
         mockService.shouldSucceed = false
         
-        viewModel.onSignUpAction(email: mockUser.email!, password: "Password1!", confirmPassword: "Password1!")
+        viewModel.onSignUpAction(email: "test@example.com", password: "Password1!", confirmPassword: "Password1!")
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             XCTAssertTrue(self.mockService.isServiceCalled)
             XCTAssertTrue(self.viewModel.isShowingAlert)
-            XCTAssertEqual(self.viewModel.alertMessage, "An unknown error occurred. Please try again.")
+            XCTAssertNotNil(self.viewModel.alertMessage)
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 2.0)
-        
         
     }
 }

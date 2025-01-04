@@ -38,7 +38,9 @@ final class MedicineStockViewModelTests: XCTestCase {
             XCTAssertEqual(self.viewModel.filterText, testFilterText, "Filter text should be updated.")
             XCTAssertTrue(self.viewModel.medicines.isEmpty, "Medicines array should be reset.")
             XCTAssertTrue(self.mockService.serviceIsCalled, "fetchMedicines should be called.")
+            expectations.fulfill()
         }
+        wait(for: [expectation], timeout: 1.0)
     }
     
     func testUpdateSorting() {
@@ -54,13 +56,15 @@ final class MedicineStockViewModelTests: XCTestCase {
             XCTAssertEqual(self.viewModel.sortOption, testSortOption, "Sort option should be updated.")
             XCTAssertTrue(self.viewModel.medicines.isEmpty, "Medicines array should be reset.")
             XCTAssertTrue(self.mockService.serviceIsCalled, "fetchMedicines should be called.")
+            expectations.fulfill()
         }
+        wait(for: [expectation], timeout: 1.0)
     }
     
     func testFetchMedicinesSuccess() {
         // Given
         let expectation = XCTestExpectation()
-        let expectedMedicines = [Medicine(id: "1", name: "Paracetamol", stock: 20, aisle: "A1")]
+        let expectedMedicines = [Medicine(name: "Paracetamol", stock: 20, aisle: "A1")]
         mockService.fetchedMedicines = expectedMedicines
         mockService.shouldSucceed = true
         
@@ -74,12 +78,13 @@ final class MedicineStockViewModelTests: XCTestCase {
             XCTAssertNil(self.viewModel.alertMessage, "No alert message should be shown on success.")
             expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 1.0)
     }
 
     func testFetchMedicinesFailure() {
         // Given
         let expectation = XCTestExpectation()
-        let expectedMedicines = [Medicine(id: "1", name: "Paracetamol", stock: 20, aisle: "A1")]
+        let expectedMedicines = [Medicine(name: "Paracetamol", stock: 20, aisle: "A1")]
         mockService.fetchedMedicines = expectedMedicines
         mockService.shouldSucceed = false
         
@@ -94,6 +99,7 @@ final class MedicineStockViewModelTests: XCTestCase {
             XCTAssertTrue(self.viewModel.medicines.isEmpty)
             expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 1.0)
     }
     func testAddMedicineSuccess() {
         // Given
@@ -110,12 +116,14 @@ final class MedicineStockViewModelTests: XCTestCase {
             XCTAssertTrue(self.viewModel.isAdded, "Medicine should be added successfully.")
             expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 1.0)
     }
 
     func testAddMedicineFailure() {
         // Given
-        let expectation = XCTestExpectation()
+        let expectation = XCTestExpectation(description: "Add medicine should fail and show an alert")
         mockService.shouldSucceed = false
+        viewModel.isLoading = true
         
         // When
         viewModel.addMedicine(name: "Ibuprofen", stock: 30, aisle: "B2")
@@ -128,6 +136,7 @@ final class MedicineStockViewModelTests: XCTestCase {
             XCTAssertNotNil(self.viewModel.alertMessage, "An alert message should be shown on error.")
             expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 1.0)
     }
 
 }

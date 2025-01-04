@@ -47,7 +47,7 @@ final class MedicineDetailViewModelTests: XCTestCase {
         XCTAssertFalse(viewModel.isEditing, "isEditing should be false after calling onCancelAction")
     }
     
-    func testOnDoneActionUpdatesMedicineSuccessfully() async {
+    func testOnDoneActionUpdatesMedicineSuccessfully() {
         // Given
         let expectation = XCTestExpectation()
         let originalMedicine = Medicine(id: "1", name: "Aspirin", stock: 100, aisle: "A1")
@@ -66,6 +66,7 @@ final class MedicineDetailViewModelTests: XCTestCase {
             XCTAssertFalse(self.viewModel.isEditing, "isEditing should be false after calling onDoneAction")
             expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 1.0)
     }
     
     func testOnDoneActionFailsToUpdateMedicine() {
@@ -86,38 +87,53 @@ final class MedicineDetailViewModelTests: XCTestCase {
             XCTAssertTrue(self.viewModel.isShowingAlert)
             expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 1.0)
     }
-    func testFetchHistorySuccessfully() async {
+    func testFetchHistorySuccessfully() {
         // Given
-        let expectation = XCTestExpectation()
+        let mockMedicine = Medicine(id: "1", name: "Aspirin", stock: 100, aisle: "A1")
         let sampleHistory = [
-            HistoryEntry(id: "1", medicineId: "1", user: "test@example.com", action: "Test Action", details: "Test Details")
+            HistoryEntry(medicineId: "1", user: "test@example.com", action: "Test Action", details: "Test Details", timestamp: Date())
         ]
+        mockService.fetchedMedicines = [mockMedicine]
         mockService.shouldSucceed = true
         mockService.historyEntries = sampleHistory
         
+        let expectation = XCTestExpectation(description: "History fetch should succeed")
+
         // When
-        viewModel.fetchHistory(for: Medicine(id: "1", name: "Aspirin", stock: 100, aisle: "A1"))
-        
+        viewModel.fetchHistory(for: mockMedicine)
+
         // Then
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             XCTAssertEqual(self.viewModel.history, sampleHistory, "The fetched history should match the stubbed data")
+            XCTAssertFalse(self.viewModel.isLoading, "isLoading should be set to false after fetch")
+            XCTAssertNil(self.viewModel.alertMessage, "alertMessage should be nil when fetch succeeds")
+            XCTAssertFalse(self.viewModel.isShowingAlert, "isShowingAlert should be false when fetch succeeds")
             expectation.fulfill()
         }
+        
+        wait(for: [expectation], timeout: 1.0)
     }
     
-    func testFetchHistoryFails() async {
+    func testFetchHistoryFails() {
         // Given
-        let expectation = XCTestExpectation()
+        let mockMedicine = Medicine(id: "1", name: "Aspirin", stock: 100, aisle: "A1")
         mockService.shouldSucceed = false
         
-        viewModel.fetchHistory(for: Medicine(id: "1", name: "Aspirin", stock: 100, aisle: "A1"))
-        
+        let expectation = XCTestExpectation(description: "History fetch should fail and show an alert")
+
+        // When
+        viewModel.fetchHistory(for: mockMedicine)
+
+        // Then
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            XCTAssertEqual(self.viewModel.alertMessage, "An error occured while fetching history")
-            XCTAssertTrue(self.viewModel.isShowingAlert)
+            XCTAssertEqual(self.viewModel.alertMessage, "An error occured while fetching history", "Alert message should indicate fetch failure")
+            XCTAssertTrue(self.viewModel.isShowingAlert, "isShowingAlert should be true when fetch fails")
+            XCTAssertTrue(self.viewModel.history.isEmpty, "History should remain empty after a failed fetch")
             expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 1.0)
     }
     
 }
