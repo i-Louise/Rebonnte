@@ -9,7 +9,7 @@ import Foundation
 
 class MedicineDetailViewModel: ObservableObject {
     private let networkService: MedicineStockProtocol
-    private let currentUserRepository: CurrentUserRepository
+    private let currentUserRepository: CurrentUserProtocol
     @Published var medicine: Medicine
     @Published var medicineCopy: Medicine
     @Published var isEditing: Bool = false
@@ -18,7 +18,7 @@ class MedicineDetailViewModel: ObservableObject {
     @Published var alertMessage: String? = nil
     @Published var isShowingAlert: Bool = false
     
-    init(networkService: MedicineStockProtocol, medicine: Medicine, currentUserRepository: CurrentUserRepository) {
+    init(networkService: MedicineStockProtocol, medicine: Medicine, currentUserRepository: CurrentUserProtocol) {
         self.networkService = networkService
         self.medicine = medicine
         self.medicineCopy = medicine

@@ -18,6 +18,7 @@ class AuthServiceMock: AuthenticationProtocol {
     func signIn(email: String, password: String) async throws -> User {
         isServiceCalled = true
         if shouldSucceed {
+            loginSucceed = true
             return mockUser
         } else {
             throw AuthError.invalidCredentials
