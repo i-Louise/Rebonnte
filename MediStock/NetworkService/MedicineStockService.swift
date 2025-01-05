@@ -140,8 +140,13 @@ class MedicineStockService: MedicineStockProtocol {
     }
     
     func fetchHistory(for medicineId: String) async throws -> [HistoryEntry] {
-        try await withCheckedThrowingContinuation { continuation in
-            db.collection("history")
+        try await withCheckedThrowingContinuation { [weak self] continuation in
+            guard let self = self else {
+                continuation.resume(throwing: NSError(domain: "NetworkService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Object deallocated"]))
+                return
+            }
+            
+            self.db.collection("history")
                 .whereField("medicineId", isEqualTo: medicineId)
                 .order(by: "timestamp", descending: true)
                 .getDocuments { querySnapshot, error in

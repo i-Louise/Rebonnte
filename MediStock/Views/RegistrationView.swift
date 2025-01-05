@@ -37,6 +37,11 @@ struct RegistrationView: View {
                     .padding(.vertical, 8)
                 }
             }
+            .onChange(of: viewModel.isUserRegistered) { newValue in
+                if newValue {
+                    showPopover = false
+                }
+            }
         }.alert(isPresented: $viewModel.isShowingAlert) {
             Alert(
                 title: Text("An Error occured"),
