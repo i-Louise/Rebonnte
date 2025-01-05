@@ -5,7 +5,7 @@ struct LoginView: View {
     @State private var password = ""
     @ObservedObject var viewModel: LoginViewModel
     @State private var showPopover = false
-
+    
     var body: some View {
         VStack(spacing: 20) {
             VStack {
@@ -32,7 +32,9 @@ struct LoginView: View {
                     .cornerRadius(30)
             }
             .disabled(email.isEmpty || password.isEmpty)
-
+            .accessibilityLabel("Login button")
+            .accessibilityHint("Tap to log in to your account")
+            
             Button(action: {
                 showPopover = true
             }) {
@@ -41,6 +43,8 @@ struct LoginView: View {
             .popover(isPresented: $showPopover) {
                 RegistrationView(viewModel: viewModel.registrationViewModel, showPopover: $showPopover)
             }
+            .accessibilityLabel("Sign Up button")
+            .accessibilityHint("Tap to sign up for a new account")
         }
         .padding()
         .alert(isPresented: $viewModel.showingAlert) {
@@ -113,7 +117,7 @@ struct PasswordEntryFieldView: View {
                     .foregroundStyle(.gray)
             })
             .accessibilityIdentifier("passwordVisibilityButton")
-
+            
         }
         .padding()
         .background(Color(UIColor.secondarySystemBackground))
@@ -127,6 +131,7 @@ struct PasswordEntryFieldView: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .font(.caption)
                 .foregroundColor(.red)
+                .accessibilityLabel("Error message: \(errorMessage)")
         }
     }
 }

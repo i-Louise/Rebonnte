@@ -40,9 +40,9 @@ class MedicineStockService: MedicineStockProtocol {
             case .stock:
                 query = query.order(by: "stock")
             case .none:
-                break
+                query = query.order(by: "createdAt", descending: true)
             }
-            
+                        
             query.getDocuments { snapshot, error in
                 if let error = error {
                     continuation.resume(throwing: error)
@@ -61,7 +61,7 @@ class MedicineStockService: MedicineStockProtocol {
     
     func fetchAisles() async throws -> [String] {
         try await withCheckedThrowingContinuation { continuation in
-            db.collection("medicines").getDocuments { querySnapshot, error in
+            db.collection("medicines").order(by:"aisle", descending: true).getDocuments { querySnapshot, error in
                 if let error = error {
                     continuation.resume(throwing: error)
                     return
@@ -81,7 +81,8 @@ class MedicineStockService: MedicineStockProtocol {
     }
     
     func addMedicine(name: String, stock: Int, aisle: String, currentUserRepository: CurrentUserRepository) async throws {
-        let medicine = Medicine(name: name, stock: stock, aisle: aisle)
+        let createdAt = Date.now
+        let medicine = Medicine(name: name, stock: stock, aisle: aisle, createdAt: createdAt)
         let medicineID = medicine.id ?? UUID().uuidString
         
         do {
@@ -142,6 +143,7 @@ class MedicineStockService: MedicineStockProtocol {
         try await withCheckedThrowingContinuation { continuation in
             db.collection("history")
                 .whereField("medicineId", isEqualTo: medicineId)
+                .order(by: "timestamp", descending: true)
                 .getDocuments { querySnapshot, error in
                     if let error = error {
                         continuation.resume(throwing: error)

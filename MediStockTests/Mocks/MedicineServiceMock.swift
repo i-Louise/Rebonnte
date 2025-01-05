@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Firebase
 @testable import MediStock
 
 class MedicineServiceMock: MedicineStockProtocol {
@@ -18,11 +19,12 @@ class MedicineServiceMock: MedicineStockProtocol {
     var historyEntries: [HistoryEntry] = []
     var addedMedicineSucceed: Bool = false
     var updateMedicineSucceed: Bool = false
+    var mockLastDocument: DocumentSnapshot? = nil
     
-    func fetchMedicines(filter: String?, sortOption: MediStock.SortOption) async throws -> [Medicine] {
+    func fetchMedicines(filter: String? = nil, sortOption: SortOption = .none, lastVisible: DocumentSnapshot? = nil) async throws -> ([Medicine], DocumentSnapshot?){
         serviceIsCalled = true
         if shouldSucceed {
-            return fetchedMedicines
+            return (fetchedMedicines, mockLastDocument)
         } else {
             throw NSError(domain: "MockMedicineStockService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch medicines"])
         }
