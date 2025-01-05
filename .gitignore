@@ -1,3 +1,5 @@
 GoogleService-Info.plist
+
+# Ignore Xcode workspace user data
 *.xcuserstate
 xcuserdata/

@@ -14,10 +14,14 @@ struct MedicineListView: View {
                         VStack(alignment: .leading) {
                             Text(medicine.name)
                                 .font(.headline)
+                                .accessibilityLabel("\(medicine.name)")
+                                .accessibilityHint("Tap for more details about this medicine.")
                             Text("Stock: \(medicine.stock)")
                                 .font(.subheadline)
+                                .accessibilityLabel("\(medicine.stock) in stock")
                         }
                     }
+                    .accessibilityElement(children: .combine)
                 }
             }
             .navigationBarTitle(aisle)

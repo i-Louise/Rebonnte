@@ -14,6 +14,7 @@ class AuthServiceMock: AuthenticationProtocol {
     var isSignOut: Bool = false
     var isServiceCalled: Bool = false
     var mockUser: User = User(uid: "mock")
+    var removeAuthListenerCalled = false
 
     func signIn(email: String, password: String) async throws -> User {
         isServiceCalled = true
@@ -34,7 +35,7 @@ class AuthServiceMock: AuthenticationProtocol {
         }
     }
     
-    func signOut() async throws {
+    func signOut() throws {
         isServiceCalled = true
         if shouldSucceed {
             isSignOut = true
@@ -43,6 +44,7 @@ class AuthServiceMock: AuthenticationProtocol {
         }
     }
 
+    func listenForAuthChanges(onStateChange: @escaping (MediStock.User?) -> Void) {}
     
-    
+    func removeAuthListener() {}
 }

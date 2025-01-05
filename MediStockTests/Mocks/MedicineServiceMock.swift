@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Firebase
 @testable import MediStock
 
 class MedicineServiceMock: MedicineStockProtocol {
@@ -18,6 +19,7 @@ class MedicineServiceMock: MedicineStockProtocol {
     var historyEntries: [HistoryEntry] = []
     var addedMedicineSucceed: Bool = false
     var updateMedicineSucceed: Bool = false
+    var mockLastDocument: DocumentSnapshot? = nil
     
     func fetchMedicines(filter: String?, sortOption: MediStock.SortOption) async throws -> [Medicine] {
         serviceIsCalled = true

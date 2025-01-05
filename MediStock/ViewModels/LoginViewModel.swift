@@ -15,7 +15,9 @@ class LoginViewModel: ObservableObject {
     @Published var alertMessage: String? = nil
     @Published var errorMessage: String? = nil
     @Published var showingAlert = false
-    
+    @Published var isSignedOut = false
+    @Published var isLoggedIn = false
+    @Published var user: User?
     
     init(authenticationService: AuthenticationProtocol, currentUserRepository: CurrentUserRepository) {
         self.authenticationService = authenticationService
@@ -49,16 +51,22 @@ class LoginViewModel: ObservableObject {
         Task {
             do {
                 let signedUser = try await authenticationService.signIn(email: email, password: password)
-                self.currentUserRepository.setUser(signedUser)
-                self.isLoading = false
+                DispatchQueue.main.async {
+                    self.currentUserRepository.setUser(signedUser)
+                    self.isLoading = false
+                }
             } catch let signInError as AuthError {
-                self.alertMessage = signInError.errorDescription
-                self.isLoading = false
-                self.showingAlert = true
+                DispatchQueue.main.async {
+                    self.alertMessage = signInError.errorDescription
+                    self.isLoading = false
+                    self.showingAlert = true
+                }
             } catch {
-                self.alertMessage = error.localizedDescription
-                self.isLoading = false
-                self.showingAlert = true
+                DispatchQueue.main.async {
+                    self.alertMessage = error.localizedDescription
+                    self.isLoading = false
+                    self.showingAlert = true
+                }
             }
         }
     }
@@ -68,12 +76,19 @@ class LoginViewModel: ObservableObject {
         alertMessage = nil
         Task {
             do {
-                try await authenticationService.signOut()
-                self.isLoading = false
+                try authenticationService.signOut()
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.currentUserRepository.clearUser()
+                    self.user = nil
+                    self.isLoggedIn = false
+                }
             } catch {
-                self.alertMessage = "An unexpected error occured. Please try again."
-                self.isLoading = false
-                self.showingAlert = true
+                DispatchQueue.main.async {
+                    self.alertMessage = "An unexpected error occured. Please try again."
+                    self.isLoading = false
+                    self.showingAlert = true
+                }
             }
         }
     }
@@ -82,5 +97,4 @@ class LoginViewModel: ObservableObject {
         let usernameTest = NSPredicate(format: "SELF MATCHES %@", "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
         return usernameTest.evaluate(with: email)
     }
-    
 }

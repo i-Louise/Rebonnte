@@ -10,6 +10,8 @@ struct AisleListView: View {
                 ForEach(viewModel.aisles, id: \.self) { aisle in
                     NavigationLink(destination: MedicineListView(viewModel: viewModel, aisle: aisle)) {
                         Text(aisle)
+                            .accessibilityLabel("Aisle \(aisle)")
+                            .accessibilityHint("Tap to see the list of medicines in aisle \(aisle).")
                     }
                 }
             }
@@ -18,6 +20,9 @@ struct AisleListView: View {
                 isShowingAddMedicineSheet = true
             }) {
                 Image(systemName: "plus")
+                    .accessibilityLabel("Add new medicine")
+                    .accessibilityHint("Tap to add a new medicine to the inventory.")
+
             })
             .sheet(isPresented: $isShowingAddMedicineSheet) {
                 AddMedicineView(isShowingAddMedicineSheet: $isShowingAddMedicineSheet)

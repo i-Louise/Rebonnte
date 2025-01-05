@@ -29,11 +29,15 @@ struct EditingMedicineDetailView: View {
                 Button("Cancel") {
                     viewModel.onCancelAction()
                 }
+                .accessibilityLabel("Cancel")
+                .accessibilityHint("Tap to cancel the edit and return to the previous screen.")
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Done") {
                     viewModel.onDoneAction()
                 }
+                .accessibilityLabel("Done")
+                .accessibilityHint("Tap to save the changes and exit the screen.")
             }
         }.alert(isPresented: $viewModel.isShowingAlert) {
             Alert(
@@ -53,6 +57,7 @@ extension EditingMedicineDetailView {
         VStack(alignment: .leading) {
             Text("Stock")
                 .font(.headline)
+                .accessibilityLabel("Stock section")
             HStack {
                 Button(action: {
                     if viewModel.medicineCopy.stock > 0 {
@@ -63,6 +68,8 @@ extension EditingMedicineDetailView {
                         .font(.title)
                         .foregroundColor(.red)
                 }
+                .accessibilityLabel("Decrease")
+                .accessibilityHint("Tap to decrease the stock by 1.")
                 TextField(
                     "Stock",
                     text: Binding(
@@ -80,6 +87,8 @@ extension EditingMedicineDetailView {
                         .font(.title)
                         .foregroundColor(.green)
                 }
+                .accessibilityLabel("Increase stock")
+                .accessibilityHint("Tap to increase the stock by 1.")
             }
             .padding(.bottom, 10)
         }
@@ -101,6 +110,8 @@ struct CustomTextFieldView: View {
         .padding()
         .background(Color(UIColor.secondarySystemBackground))
         .cornerRadius(5)
+        .accessibilityLabel("\(placeholder) field")
+        .accessibilityHint("Enter the \(placeholder)")
     }
 }
 

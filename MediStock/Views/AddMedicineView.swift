@@ -21,6 +21,8 @@ struct AddMedicineView: View {
             Form {
                 Section(header: Text("Medicine Information")) {
                     TextField("Name", text: $name)
+                        .accessibilityLabel("Medicine name")
+                        .accessibilityHint("Enter the name of the medicine.")
                     TextField("Stock", text: Binding(
                         get: { String(stock) },
                         set: {
@@ -30,17 +32,26 @@ struct AddMedicineView: View {
                         }
                     ))
                     .keyboardType(.numberPad)
+                    .accessibilityLabel("Stock quantity")
+                    .accessibilityHint("Enter the quantity of the medicine in stock.")
+                    
                     TextField("Aisle", text: $aisle)
                         .keyboardType(.numberPad)
+                        .accessibilityLabel("Aisle number")
+                        .accessibilityHint("Enter the aisle number where the medicine is located.")
                 }
             }
             .navigationTitle("Add Medicine")
             .navigationBarItems(leading: Button("Cancel", action: {
                 isShowingAddMedicineSheet = false
-            }), trailing: Button("Add") {
+            }).accessibilityLabel("Cancel")
+                .accessibilityHint("Cancel and close the form."),
+                                
+                trailing: Button("Add") {
                 viewModel.addMedicine(name: name, stock: stock, aisle: aisle)
             }
                 .disabled(name.isEmpty || aisle.isEmpty || stock == 0)
+                .accessibilityLabel("Add medicine")
             )
             .onChange(of: viewModel.isAdded) { newValue in
                 if newValue {

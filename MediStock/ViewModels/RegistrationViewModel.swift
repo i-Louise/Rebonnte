@@ -41,9 +41,11 @@ class RegistrationViewModel: ObservableObject {
         isLoading = true
         Task {
             do {
-                let user = try await authenticationService.signUp(email: email, password: password)
-                self.isUserRegistered = true
-                self.isLoading = false
+                _ = try await authenticationService.signUp(email: email, password: password)
+                DispatchQueue.main.async {
+                    self.isUserRegistered = true
+                    self.isLoading = false
+                }
             } catch let error as AuthError {
                 DispatchQueue.main.async {
                     self.alertMessage = error.errorDescription

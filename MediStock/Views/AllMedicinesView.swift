@@ -16,6 +16,8 @@ struct AllMedicinesView: View {
                         .onChange(of: viewModel.filterText) { newValue in
                             viewModel.updateFilter(text: newValue)
                         }
+                        .accessibilityLabel("Filter by name")
+                        .accessibilityHint("Type to filter medicines by name.")
                     
                     Spacer()
 
@@ -29,6 +31,8 @@ struct AllMedicinesView: View {
                     .onChange(of: viewModel.sortOption) { newValue in
                         viewModel.updateSorting(option: newValue)
                     }
+                    .accessibilityLabel("Sort options")
+                    .accessibilityHint("Select a sort option for the list of medicines.")
                 }
                 .padding(.top, 10)
                 
@@ -39,14 +43,17 @@ struct AllMedicinesView: View {
                             VStack(alignment: .leading) {
                                 Text(medicine.name)
                                     .font(.headline)
+                                    .accessibilityLabel("\(medicine.name)")
                                 Text("Stock: \(medicine.stock)")
                                     .font(.subheadline)
+                                    .accessibilityLabel("Stock count: \(medicine.stock)")
                             }
                         }
                     }
                     .onDelete { offsets in
                         viewModel.deleteMedicines(at: offsets)
                     }
+                    
                 }
                 .navigationBarTitle("All Medicines")
                 .navigationBarItems(
@@ -54,6 +61,8 @@ struct AllMedicinesView: View {
                         isShowingAddMedicineSheet = true
                     }) {
                         Image(systemName: "plus")
+                            .accessibilityLabel("Add new medicine")
+                            .accessibilityHint("Tap to add a new medicine to the list.")
                     }
                 )
                 .sheet(isPresented: $isShowingAddMedicineSheet) {

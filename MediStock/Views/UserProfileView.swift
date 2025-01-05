@@ -24,6 +24,16 @@ struct UserProfileView: View {
             }
         }
         .padding()
+        .alert(isPresented: $viewModel.showingAlert) {
+            Alert(
+                title: Text("An Error occured"),
+                message: Text(viewModel.alertMessage ?? ""),
+                dismissButton: .default(Text("OK"))
+            )
+        }
+        .overlay(
+            ProgressViewCustom(isLoading: viewModel.isLoading)
+        )
     }
 }
 
